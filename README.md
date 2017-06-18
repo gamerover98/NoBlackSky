@@ -1,0 +1,2 @@
+# NoBlackSky
+NoBlackSky spigot plugin
