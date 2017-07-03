@@ -35,9 +35,9 @@ public class NBS extends JavaPlugin {
 	@Getter private static NBS_Configuration configuration;
 
 	/*
-	 * TinyProtocol instance
+	 * PacketAdapter instance
 	 */
-	@Getter private static NBS_PacketAdapter nbsTinyProtocol;
+	@Getter private static NBS_PacketAdapter nbsPacketAdapter;
 
 	/*
 	 * ProtocolManager instance of ProtocolLib
