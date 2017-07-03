@@ -10,8 +10,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 
 import it.gamerover.nbs.NBS;
-import it.gamerover.nbs.NBS_Logger;
 import it.gamerover.nbs.configuration.NBS_Configuration;
+import it.gamerover.nbs.logger.NBS_Logger;
 
 /**
  * 

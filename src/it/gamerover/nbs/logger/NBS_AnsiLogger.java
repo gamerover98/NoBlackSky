@@ -1,16 +1,18 @@
-package it.gamerover.nbs;
+package it.gamerover.nbs.logger;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.fusesource.jansi.Ansi;
 
+import it.gamerover.nbs.NBS;
+
 /**
  * 
  * @author gamerover98
  *
  */
-public final class NBS_Logger {
+public final class NBS_AnsiLogger {
 
 	private static Logger logger = NBS.getInstance().getLogger();
 

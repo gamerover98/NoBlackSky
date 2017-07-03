@@ -12,6 +12,7 @@ import com.comphenix.protocol.ProtocolManager;
 
 import it.gamerover.nbs.command.NBS_Command;
 import it.gamerover.nbs.configuration.NBS_Configuration;
+import it.gamerover.nbs.logger.NBS_Logger;
 import lombok.Getter;
 
 /**
@@ -53,6 +54,8 @@ public class NBS extends JavaPlugin {
 		instance = this;
 		protocolManager = ProtocolLibrary.getProtocolManager();
 
+		NBS_Logger.init();
+		
 		try {
 
 			//Start config.yml
