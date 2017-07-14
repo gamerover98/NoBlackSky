@@ -11,8 +11,8 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 
 import it.gamerover.nbs.configuration.NBS_Configuration;
-import it.gamerover.nbs.configuration.wrapper.WrapperPlayServerLogin;
-import it.gamerover.nbs.configuration.wrapper.WrapperPlayServerRespawn;
+import it.gamerover.nbs.wrapper.WrapperPlayServerLogin;
+import it.gamerover.nbs.wrapper.WrapperPlayServerRespawn;
 
 /**
  * 
@@ -55,7 +55,7 @@ public class NBS_PacketAdapter extends PacketAdapter {
 		if (config.isParadise_land()) {
 
 			//check if world generator package name is not equal to ParadiseLand
-			if (!world_generator_package_name.equals("it.gamerover.paradise")) {
+			if (!world_generator_package_name.equals("it.gamerover.paradise") || !world_generator_package_name.equals("me.gamerover.paradise")) {
 
 				//Check if world name is contained in the blacklist in the config.yml
 				if (config.contains_blacklist_world(world_name)) {
