@@ -1,6 +1,7 @@
 # NoBlackSky
+This Spigot/Paper plugin prevents the black sky glitch under y = 61 in void worlds without flat environment type.
 
-NoBlackSky plugin on spigot link: https://www.spigotmc.org/resources/world-type-changer.25337/
-depend: https://www.spigotmc.org/resources/protocollib.1997/
+Spigot's plugin page: https://www.spigotmc.org/resources/world-type-changer.25337/
+This plugin needs ProtocolLib plugin to be executed.
 
-# Lombok (eclipse plugin) is required in the build path
+# Lombok plugin is required in your IDE. I suggest you to use IntelliJ Idea. 
