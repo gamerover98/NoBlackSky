@@ -64,8 +64,16 @@
                     </filters>
                     <relocations>
                         <relocation>
-                            <pattern>com.comphenix</pattern>
-                            <shadedPattern>it.gamerover.nbs.libs.com.comphenix</shadedPattern>
+                            <pattern>com</pattern>
+                            <shadedPattern>it.gamerover.nbs.libs.com</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>ch</pattern>
+                            <shadedPattern>it.gamerover.nbs.libs.ch</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org</pattern>
+                            <shadedPattern>it.gamerover.nbs.libs.org</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -91,10 +99,19 @@
 
     <dependencies>
 
+        <!-- COMPILED LIBS -->
+
         <dependency>
             <groupId>com.comphenix.packetwrapper</groupId>
             <artifactId>PacketWrapper</artifactId>
             <version>1.12.1-R0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>ch.jalu</groupId>
+            <artifactId>configme</artifactId>
+            <version>1.2.0</version>
             <scope>compile</scope>
         </dependency>
 
