@@ -64,16 +64,16 @@
                     </filters>
                     <relocations>
                         <relocation>
-                            <pattern>com</pattern>
-                            <shadedPattern>it.gamerover.nbs.libs.com</shadedPattern>
+                            <pattern>com.comphenix.packetwrapper</pattern>
+                            <shadedPattern>it.gamerover.nbs.libs.com.comphenix.packetwrapper</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>ch</pattern>
-                            <shadedPattern>it.gamerover.nbs.libs.ch</shadedPattern>
+                            <pattern>ch.jalu</pattern>
+                            <shadedPattern>it.gamerover.nbs.libs.ch.jalu</shadedPattern>
                         </relocation>
                         <relocation>
-                            <pattern>org</pattern>
-                            <shadedPattern>it.gamerover.nbs.libs.org</shadedPattern>
+                            <pattern>org.yaml</pattern>
+                            <shadedPattern>it.gamerover.nbs.libs.org.yaml</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
