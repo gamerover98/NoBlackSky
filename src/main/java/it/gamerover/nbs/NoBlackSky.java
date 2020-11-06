@@ -3,13 +3,13 @@ package it.gamerover.nbs;
 import java.util.Arrays;
 
 import it.gamerover.nbs.configuration.ConfigManager;
-import org.bukkit.command.PluginCommand;
+import it.gamerover.nbs.packet.NoBlackSkyAdapter;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
-import it.gamerover.nbs.command.NBS_Command;
+import it.gamerover.nbs.command.PluginCommand;
 import it.gamerover.nbs.logger.PluginLogger;
 import lombok.Getter;
 
@@ -33,7 +33,7 @@ public class NoBlackSky extends JavaPlugin {
 	 * PacketAdapter instance
 	 */
 	@Getter
-	private static NBS_PacketAdapter nbsPacketAdapter;
+	private static NoBlackSkyAdapter nbsPacketAdapter;
 
 	/*
 	 * ProtocolManager instance of ProtocolLib
@@ -41,7 +41,7 @@ public class NoBlackSky extends JavaPlugin {
 	@Getter
 	private static ProtocolManager protocolManager;
 
-	private NBS_PacketAdapter nbs_PacketAdapter;
+	private NoBlackSkyAdapter noBlackSkyAdapter;
 	private boolean enable = true;
 
 	@Override
@@ -76,21 +76,21 @@ public class NoBlackSky extends JavaPlugin {
 		}
 
 		//The NoBlackSky command
-		PluginCommand nbsCommand = getInstance().getCommand("NoBlackSky");
+		org.bukkit.command.PluginCommand nbsCommand = getInstance().getCommand("NoBlackSky");
 
-		nbsCommand.setExecutor(new NBS_Command());
+		nbsCommand.setExecutor(new PluginCommand());
 		nbsCommand.setAliases(Arrays.asList(new String[]{"nbs"}));
 
-		this.nbs_PacketAdapter = new NBS_PacketAdapter(instance);
+		this.noBlackSkyAdapter = new NoBlackSkyAdapter(instance);
 		
-		protocolManager.addPacketListener(nbs_PacketAdapter);
+		protocolManager.addPacketListener(noBlackSkyAdapter);
 		PluginLogger.info("NoBlackSky successfully enabled!");
 		
 	}
 
 	@Override
 	public void onDisable() {
-		protocolManager.removePacketListener(this.nbs_PacketAdapter);
+		protocolManager.removePacketListener(this.noBlackSkyAdapter);
 	}
 	
 	/*

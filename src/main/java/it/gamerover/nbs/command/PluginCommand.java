@@ -14,7 +14,7 @@ import it.gamerover.nbs.logger.PluginLogger;
  * @author gamerover98
  *
  */
-public class NBS_Command implements CommandExecutor {
+public class PluginCommand implements CommandExecutor {
 
 	private static final String ADD_COMMAND = "add";
 	private static final String REMOVE_COMMAND = "remove";

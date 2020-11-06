@@ -1,4 +1,4 @@
-package it.gamerover.nbs;
+package it.gamerover.nbs.packet;
 
 import com.comphenix.packetwrapper.WrapperPlayServerLogin;
 import com.comphenix.packetwrapper.WrapperPlayServerRespawn;
@@ -16,13 +16,11 @@ import com.comphenix.protocol.events.PacketEvent;
 import java.util.Set;
 
 /**
- * 
  * @author gamerover98
- *
  */
-public class NBS_PacketAdapter extends PacketAdapter {
+public class NoBlackSkyAdapter extends PacketAdapter {
 
-	public NBS_PacketAdapter(Plugin plugin) {
+	public NoBlackSkyAdapter(Plugin plugin) {
 		super(plugin, WrapperPlayServerLogin.TYPE, WrapperPlayServerRespawn.TYPE);
 	}
 
