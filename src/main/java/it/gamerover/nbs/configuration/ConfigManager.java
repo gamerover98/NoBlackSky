@@ -57,6 +57,19 @@ public class ConfigManager {
     }
 
     /**
+     * @return True if all normal worlds must be fixed by default
+     * @throws IllegalStateException If the configuration is not loaded.
+     */
+    public static boolean isAlwaysEnabled() {
+
+        checkSettings();
+
+        assert settingsManager != null;
+        return settingsManager.getProperty(ConfigHolder.ALWAYS_ENABLED);
+
+    }
+
+    /**
      * @return An unmodifiable set of strings that contains the worlds' name.
      * @throws IllegalStateException If the configuration is not loaded.
      */
