@@ -1,6 +1,6 @@
 package it.gamerover.nbs;
 
-import java.util.Arrays;
+import java.util.Collections;
 
 import it.gamerover.nbs.configuration.ConfigManager;
 import it.gamerover.nbs.packet.NoBlackSkyAdapter;
@@ -83,7 +83,7 @@ public class NoBlackSky extends JavaPlugin {
 		org.bukkit.command.PluginCommand nbsCommand = getInstance().getCommand("NoBlackSky");
 
 		nbsCommand.setExecutor(new PluginCommand());
-		nbsCommand.setAliases(Arrays.asList(new String[]{"nbs"}));
+		nbsCommand.setAliases(Collections.singletonList("nbs"));
 
 		this.noBlackSkyAdapter = new NoBlackSkyAdapter(instance);
 		
