@@ -6,7 +6,7 @@ import java.util.List;
 
 import org.bukkit.configuration.InvalidConfigurationException;
 
-import it.gamerover.nbs.NBS;
+import it.gamerover.nbs.NoBlackSky;
 import lombok.Getter;
 
 /**
@@ -31,7 +31,7 @@ public class NBS_Configuration {
 	private static final String BLACKLIST_PATH = "blacklist";
 	private static final String PARADISELAND_PATH = "paradise_land";
 
-	public NBS_Configuration(NBS instance) throws IOException, InvalidConfigurationException {
+	public NBS_Configuration(NoBlackSky instance) throws IOException, InvalidConfigurationException {
 
 		this.configurations = new FileManager("config.yml", "/config.yml");
 		this.blacklist = new ArrayList<String>();

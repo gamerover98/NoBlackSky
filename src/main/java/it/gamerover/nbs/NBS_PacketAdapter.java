@@ -1,5 +1,7 @@
 package it.gamerover.nbs;
 
+import com.comphenix.packetwrapper.WrapperPlayServerLogin;
+import com.comphenix.packetwrapper.WrapperPlayServerRespawn;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
@@ -11,8 +13,6 @@ import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 
 import it.gamerover.nbs.configuration.NBS_Configuration;
-import it.gamerover.nbs.wrapper.WrapperPlayServerLogin;
-import it.gamerover.nbs.wrapper.WrapperPlayServerRespawn;
 
 /**
  * 
@@ -49,7 +49,7 @@ public class NBS_PacketAdapter extends PacketAdapter {
 		} catch (NullPointerException nex) {
 		}
 
-		NBS_Configuration config = NBS.getConfiguration();
+		NBS_Configuration config = NoBlackSky.getConfiguration();
 
 		//Check if paradise_land is true in the config.yml
 		if (config.isParadise_land()) {

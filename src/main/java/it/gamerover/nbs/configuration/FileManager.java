@@ -8,7 +8,7 @@ import java.io.InputStream;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.YamlConfiguration;
 
-import it.gamerover.nbs.NBS;
+import it.gamerover.nbs.NoBlackSky;
 
 /**
  * 
@@ -21,8 +21,7 @@ public class FileManager extends YamlConfiguration {
 
 	public FileManager(String name, String copyFrom) throws IOException, InvalidConfigurationException {
 
-		NBS.getInstance().getDataFolder().mkdirs();
-		this.file = new File(NBS.getInstance().getDataFolder() , name);
+		this.file = new File(NoBlackSky.getInstance().getDataFolder() , name);
 
 		if (!this.file.exists()) {
 

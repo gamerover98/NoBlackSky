@@ -9,9 +9,9 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.InvalidConfigurationException;
 
-import it.gamerover.nbs.NBS;
+import it.gamerover.nbs.NoBlackSky;
 import it.gamerover.nbs.configuration.NBS_Configuration;
-import it.gamerover.nbs.logger.NBS_Logger;
+import it.gamerover.nbs.logger.NBSLogger;
 
 /**
  * 
@@ -34,7 +34,7 @@ public class NBS_Command implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-		NBS_Configuration config = NBS.getConfiguration();
+		NBS_Configuration config = NoBlackSky.getConfiguration();
 		
 		if (args.length == 0) {
 			this.helpCommand(label, sender);
@@ -76,7 +76,7 @@ public class NBS_Command implements CommandExecutor {
 					} catch (IOException | InvalidConfigurationException ex) {
 						
 						sender.sendMessage("§cCan't reload the plugin");
-						NBS_Logger.error(ex, "Can't reload the plugin, check your plugin configurations");
+						NBSLogger.error("Can't reload the plugin, check your plugin configurations", ex);
 						
 					}
 					
@@ -109,7 +109,7 @@ public class NBS_Command implements CommandExecutor {
 					} catch (IOException ioex) {
 						
 						sender.sendMessage("The world " + world_name + " can't be added, does the file config.yml exists?");
-						NBS_Logger.error(ioex, "The world " + world_name + " can't be added, does the file config.yml exists?");
+						NBSLogger.error("The world " + world_name + " can't be added, does the file config.yml exists?", ioex);
 						
 					}
 
@@ -132,7 +132,7 @@ public class NBS_Command implements CommandExecutor {
 					} catch (IOException ioex) {
 						
 						sender.sendMessage("The world " + world_name + " can't be removed, does the file config.yml exists?");
-						NBS_Logger.error(ioex, "The world " + world_name + " can't be removed, does the file config.yml exists?");
+						NBSLogger.error("The world " + world_name + " can't be removed, does the file config.yml exists?", ioex);
 						
 					}
 

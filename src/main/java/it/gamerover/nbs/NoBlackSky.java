@@ -12,7 +12,7 @@ import com.comphenix.protocol.ProtocolManager;
 
 import it.gamerover.nbs.command.NBS_Command;
 import it.gamerover.nbs.configuration.NBS_Configuration;
-import it.gamerover.nbs.logger.NBS_Logger;
+import it.gamerover.nbs.logger.NBSLogger;
 import lombok.Getter;
 
 /**
@@ -23,27 +23,31 @@ import lombok.Getter;
  *	is free and it can be used to do more
  *
  */
-public class NBS extends JavaPlugin {
+public class NoBlackSky extends JavaPlugin {
 
-	/*
-	 * NBS object instance
+	/**
+	 * Gets the NBS instance.
 	 */
-	@Getter private static NBS instance;
+	@Getter
+	private static NoBlackSky instance;
 
 	/*
 	 * Main config instance
 	 */
-	@Getter private static NBS_Configuration configuration;
+	@Getter
+	private static NBS_Configuration configuration;
 
 	/*
 	 * PacketAdapter instance
 	 */
-	@Getter private static NBS_PacketAdapter nbsPacketAdapter;
+	@Getter
+	private static NBS_PacketAdapter nbsPacketAdapter;
 
 	/*
 	 * ProtocolManager instance of ProtocolLib
 	 */
-	@Getter private static ProtocolManager protocolManager;
+	@Getter
+	private static ProtocolManager protocolManager;
 
 	private NBS_PacketAdapter nbs_PacketAdapter;
 	private boolean enable = true;
@@ -54,7 +58,7 @@ public class NBS extends JavaPlugin {
 		instance = this;
 		protocolManager = ProtocolLibrary.getProtocolManager();
 
-		NBS_Logger.init();
+		NBSLogger.init();
 		
 		try {
 
@@ -64,7 +68,7 @@ public class NBS extends JavaPlugin {
 		} catch (IOException | InvalidConfigurationException ex) {
 
 			this.enable = false;
-			NBS_Logger.error(ex, "An error occurred reading config.yml");
+			NBSLogger.error("An error occurred reading config.yml", ex);
 
 		}
 
@@ -90,7 +94,7 @@ public class NBS extends JavaPlugin {
 		this.nbs_PacketAdapter = new NBS_PacketAdapter(instance);
 		
 		protocolManager.addPacketListener(nbs_PacketAdapter);
-		NBS_Logger.info("NoBlackSky successfully enabled!");
+		NBSLogger.info("NoBlackSky successfully enabled!");
 		
 	}
 
@@ -104,7 +108,7 @@ public class NBS extends JavaPlugin {
 	 */
 	private void disable() {
 
-		NBS_Logger.info("An error occurred, ##### Disabling NBS #####");
+		NBSLogger.info("An error occurred, ##### Disabling NBS #####");
 		super.setEnabled(false);
 
 	}
