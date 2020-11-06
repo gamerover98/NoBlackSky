@@ -7,12 +7,24 @@ import it.gamerover.nbs.configuration.holder.ConfigHolder;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
+import java.util.Collections;
 import java.util.Set;
 
+/**
+ * @author gamerover98
+ * Manage the plugin configuration.
+ */
 public class ConfigManager {
 
+    /**
+     * The config file name.
+     * It will be located in the /plugins/NoBlackSky folder.
+     */
     private static final String CONFIG_FILE_NAME = "config.yml";
 
+    /**
+     * The ConfigMe settings manager instance.
+     */
     @Nullable
     private static SettingsManager settingsManager;
 
@@ -20,6 +32,9 @@ public class ConfigManager {
         throw new IllegalStateException("This is a static class");
     }
 
+    /**
+     * Reload or load the configuration file.
+     */
     public static void reload() {
 
         NoBlackSky plugin = NoBlackSky.getInstance();
@@ -41,20 +56,30 @@ public class ConfigManager {
 
     }
 
+    /**
+     * @return An unmodifiable set of strings that contains the worlds' name.
+     * @throws IllegalStateException If the configuration is not loaded.
+     */
     public static Set<String> getWorlds() {
 
         checkSettings();
 
         assert settingsManager != null;
-        return settingsManager.getProperty(ConfigHolder.WORLDS);
+        return Collections.unmodifiableSet(settingsManager.getProperty(ConfigHolder.WORLDS));
 
     }
 
+    /**
+     * @throws IllegalStateException If the settings manager instance is null,
+     *                               so if the configuration is not loaded.
+     */
     private static void checkSettings() {
 
-        if (settingsManager == null) {
-            throw new IllegalStateException("the config " + CONFIG_FILE_NAME + " is not loaded");
+        if (settingsManager != null) {
+            return;
         }
+
+        throw new IllegalStateException("the config " + CONFIG_FILE_NAME + " is not loaded");
 
     }
 
