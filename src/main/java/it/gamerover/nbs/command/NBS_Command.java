@@ -7,7 +7,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import it.gamerover.nbs.logger.NBSLogger;
+import it.gamerover.nbs.logger.PluginLogger;
 
 /**
  *
@@ -70,7 +70,7 @@ public class NBS_Command implements CommandExecutor {
 					} catch (Exception ex) {
 
 						sender.sendMessage("§cCan't reload the plugin");
-						NBSLogger.error("Can't reload the plugin, check your plugin configurations", ex);
+						PluginLogger.error("Can't reload the plugin, check your plugin configurations", ex);
 
 					}
 

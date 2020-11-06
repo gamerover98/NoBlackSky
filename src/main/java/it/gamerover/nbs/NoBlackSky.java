@@ -1,18 +1,16 @@
 package it.gamerover.nbs;
 
-import java.io.IOException;
 import java.util.Arrays;
 
 import it.gamerover.nbs.configuration.ConfigManager;
 import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
 import it.gamerover.nbs.command.NBS_Command;
-import it.gamerover.nbs.logger.NBSLogger;
+import it.gamerover.nbs.logger.PluginLogger;
 import lombok.Getter;
 
 /**
@@ -52,7 +50,7 @@ public class NoBlackSky extends JavaPlugin {
 		instance = this;
 		protocolManager = ProtocolLibrary.getProtocolManager();
 
-		NBSLogger.init();
+		PluginLogger.init();
 
 		try {
 
@@ -61,7 +59,7 @@ public class NoBlackSky extends JavaPlugin {
 		} catch (Exception ex) {
 
 			this.enable = false;
-			NBSLogger.error("An error has occurred while reading config.yml", ex);
+			PluginLogger.error("An error has occurred while reading config.yml", ex);
 
 		}
 
@@ -86,7 +84,7 @@ public class NoBlackSky extends JavaPlugin {
 		this.nbs_PacketAdapter = new NBS_PacketAdapter(instance);
 		
 		protocolManager.addPacketListener(nbs_PacketAdapter);
-		NBSLogger.info("NoBlackSky successfully enabled!");
+		PluginLogger.info("NoBlackSky successfully enabled!");
 		
 	}
 
@@ -100,7 +98,7 @@ public class NoBlackSky extends JavaPlugin {
 	 */
 	private void disable() {
 
-		NBSLogger.info("An error occurred, ##### Disabling NBS #####");
+		PluginLogger.info("An error occurred, ##### Disabling NBS #####");
 		super.setEnabled(false);
 
 	}

@@ -12,9 +12,9 @@ import org.jetbrains.annotations.Nullable;
  * @author gamerover98
  *
  */
-final class NBSAnsiLogger {
+final class ANSIPluginLogger {
 
-	private NBSAnsiLogger() {
+	private ANSIPluginLogger() {
 		throw new IllegalStateException("This is a static class");
 	}
 
@@ -31,7 +31,7 @@ final class NBSAnsiLogger {
 	public static void error(@NotNull String error, @Nullable Throwable throwable) {
 
 		String message = getAnsiColor(Ansi.Color.RED) + error + getAnsiColor(Ansi.Color.WHITE);
-		NBSLogger.getLogger().log(Level.SEVERE, message, throwable);
+		PluginLogger.getLogger().log(Level.SEVERE, message, throwable);
 
 	}
 
@@ -41,7 +41,7 @@ final class NBSAnsiLogger {
 	public static void warning(@NotNull String warning) {
 
 		String message = getAnsiColor(Ansi.Color.YELLOW) + warning + getAnsiColor(Ansi.Color.WHITE);
-		NBSLogger.getLogger().log(Level.WARNING, message);
+		PluginLogger.getLogger().log(Level.WARNING, message);
 
 	}
 
@@ -51,7 +51,7 @@ final class NBSAnsiLogger {
 	public static void info(@NotNull String info) {
 
 		String message = getAnsiColor(Ansi.Color.GREEN) + info + getAnsiColor(Ansi.Color.WHITE);
-		NBSLogger.getLogger().log(Level.INFO, message);
+		PluginLogger.getLogger().log(Level.INFO, message);
 
 	}
 

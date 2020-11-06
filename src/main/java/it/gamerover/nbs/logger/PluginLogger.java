@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
  * @author gamerover98
  *
  */
-public final class NBSLogger {
+public final class PluginLogger {
 
 	private static final String ANSI_PACKAGE_NAME = "org.fusesource.jansi.Ansi";
 
@@ -23,7 +23,7 @@ public final class NBSLogger {
 	@Getter
 	private static boolean ansiSupported = false;
 
-	private NBSLogger() {
+	private PluginLogger() {
 		throw new IllegalStateException("This is a static class");
 	}
 
@@ -49,7 +49,7 @@ public final class NBSLogger {
 	public static void error(@NotNull String error, @Nullable Throwable throwable) {
 
 		if (isAnsiSupported()) {
-			NBSAnsiLogger.error(error, throwable);
+			ANSIPluginLogger.error(error, throwable);
 		} else {
 			logger.log(Level.SEVERE, error, throwable);
 		}
@@ -62,7 +62,7 @@ public final class NBSLogger {
 	public static void warning(@NotNull String warning) {
 
 		if (isAnsiSupported()) {
-			NBSAnsiLogger.warning(warning);
+			ANSIPluginLogger.warning(warning);
 		} else {	
 			logger.log(Level.WARNING, warning);
 		}
@@ -75,7 +75,7 @@ public final class NBSLogger {
 	public static void info(@NotNull String info) {
 
 		if (isAnsiSupported()) {
-			NBSAnsiLogger.info(info);
+			ANSIPluginLogger.info(info);
 		} else {
 			logger.log(Level.INFO, info);
 		}
