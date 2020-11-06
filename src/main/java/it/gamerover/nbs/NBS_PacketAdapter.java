@@ -2,6 +2,7 @@ package it.gamerover.nbs;
 
 import com.comphenix.packetwrapper.WrapperPlayServerLogin;
 import com.comphenix.packetwrapper.WrapperPlayServerRespawn;
+import it.gamerover.nbs.configuration.ConfigManager;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
@@ -12,7 +13,7 @@ import com.comphenix.protocol.events.PacketAdapter;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.events.PacketEvent;
 
-import it.gamerover.nbs.configuration.NBS_Configuration;
+import java.util.Set;
 
 /**
  * 
@@ -40,50 +41,24 @@ public class NBS_PacketAdapter extends PacketAdapter {
 		}
 
 		World world = player.getWorld();
-		String world_name = world.getName();
-		WorldType world_type = WorldType.FLAT;
-		String world_generator_package_name = "";
-
-		try {
-			world_generator_package_name = world.getGenerator().getClass().getPackage().getName();
-		} catch (NullPointerException nex) {
-		}
-
-		NBS_Configuration config = NoBlackSky.getConfiguration();
-
-		//Check if paradise_land is true in the config.yml
-		if (config.isParadise_land()) {
-
-			//check if world generator package name is not equal to ParadiseLand
-			if (!world_generator_package_name.equals("it.gamerover.paradise") || !world_generator_package_name.equals("me.gamerover.paradise")) {
-
-				//Check if world name is contained in the blacklist in the config.yml
-				if (config.contains_blacklist_world(world_name)) {
-					return;
-				}
-
-			}
-
-		} else {
-
-			//Check if world name is contained in the blacklist in the config.yml
-			if (config.contains_blacklist_world(world_name)) {
-				return;
-			}
-
-		}
-
+		WorldType worldType = WorldType.FLAT;
 		PacketContainer packet = event.getPacket();
 
-		if (packetType == WrapperPlayServerLogin.TYPE) { //If packet class equals PACKET_PLAY_OUT_LOGIN
+		Set<String> worlds = ConfigManager.getWorlds();
 
-			WrapperPlayServerLogin wrapperPlayServerLogin = new WrapperPlayServerLogin(packet);
-			wrapperPlayServerLogin.setLevelType(world_type);
+		if (worlds.contains(world.getName())) {
 
-		} else if (packetType == WrapperPlayServerRespawn.TYPE) {  //Else if packet class equals PACKET_PLAY_OUT_RESPAWN
+			if (packetType == WrapperPlayServerLogin.TYPE) { //If packet class equals PACKET_PLAY_OUT_LOGIN
 
-			WrapperPlayServerRespawn wrapperPlayServerRespawn = new WrapperPlayServerRespawn(packet);
-			wrapperPlayServerRespawn.setLevelType(world_type);
+				WrapperPlayServerLogin wrapperPlayServerLogin = new WrapperPlayServerLogin(packet);
+				wrapperPlayServerLogin.setLevelType(worldType);
+
+			} else if (packetType == WrapperPlayServerRespawn.TYPE) {  //Else if packet class equals PACKET_PLAY_OUT_RESPAWN
+
+				WrapperPlayServerRespawn wrapperPlayServerRespawn = new WrapperPlayServerRespawn(packet);
+				wrapperPlayServerRespawn.setLevelType(worldType);
+
+			}
 
 		}
 

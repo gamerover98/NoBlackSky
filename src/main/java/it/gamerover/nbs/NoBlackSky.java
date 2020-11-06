@@ -3,6 +3,7 @@ package it.gamerover.nbs;
 import java.io.IOException;
 import java.util.Arrays;
 
+import it.gamerover.nbs.configuration.ConfigManager;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -11,7 +12,6 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
 import it.gamerover.nbs.command.NBS_Command;
-import it.gamerover.nbs.configuration.NBS_Configuration;
 import it.gamerover.nbs.logger.NBSLogger;
 import lombok.Getter;
 
@@ -30,12 +30,6 @@ public class NoBlackSky extends JavaPlugin {
 	 */
 	@Getter
 	private static NoBlackSky instance;
-
-	/*
-	 * Main config instance
-	 */
-	@Getter
-	private static NBS_Configuration configuration;
 
 	/*
 	 * PacketAdapter instance
@@ -59,19 +53,17 @@ public class NoBlackSky extends JavaPlugin {
 		protocolManager = ProtocolLibrary.getProtocolManager();
 
 		NBSLogger.init();
-		
+
 		try {
 
-			//Start config.yml
-			configuration = new NBS_Configuration(instance);
+			ConfigManager.reload();
 
-		} catch (IOException | InvalidConfigurationException ex) {
+		} catch (Exception ex) {
 
 			this.enable = false;
-			NBSLogger.error("An error occurred reading config.yml", ex);
+			NBSLogger.error("An error has occurred while reading config.yml", ex);
 
 		}
-
 
 	}
 

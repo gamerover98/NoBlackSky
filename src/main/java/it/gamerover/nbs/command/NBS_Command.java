@@ -1,20 +1,16 @@
 package it.gamerover.nbs.command;
 
+import java.util.Set;
 
-import java.io.IOException;
-import java.util.List;
-
+import it.gamerover.nbs.configuration.ConfigManager;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.InvalidConfigurationException;
 
-import it.gamerover.nbs.NoBlackSky;
-import it.gamerover.nbs.configuration.NBS_Configuration;
 import it.gamerover.nbs.logger.NBSLogger;
 
 /**
- * 
+ *
  * @author gamerover98
  *
  */
@@ -34,8 +30,6 @@ public class NBS_Command implements CommandExecutor {
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 
-		NBS_Configuration config = NoBlackSky.getConfiguration();
-		
 		if (args.length == 0) {
 			this.helpCommand(label, sender);
 		} else if (args.length == 1) {
@@ -43,18 +37,18 @@ public class NBS_Command implements CommandExecutor {
 			String sub_command = args[0];
 
 			if (sub_command.equalsIgnoreCase(LIST_COMMAND)) { //LIST COMMAND
-				
+
 				if (this.hasPermission(sender, NBS_LIST_PERMISSION)) {
 
-					List<String> blacklist = config.getBlacklist();
+					Set<String> worlds = ConfigManager.getWorlds();
 
-					if (blacklist.isEmpty()) {
+					if (worlds.isEmpty()) {
 						sender.sendMessage("§cBlacklist is empty");
 					} else {
 
 						sender.sendMessage("§5BlackListed worlds");
 
-						for (String world_name : blacklist) {
+						for (String world_name : worlds) {
 							sender.sendMessage("§a - §e" + world_name);
 						}
 
@@ -63,27 +57,27 @@ public class NBS_Command implements CommandExecutor {
 				} else {
 					noPermission(sender);
 				}
-				
+
 			} else if (sub_command.equalsIgnoreCase(RELOAD_COMMAND)) { // RELOAD COMMAND
-				
+
 				if (this.hasPermission(sender, NBS_RELOAD_PERMISSION)) {
-					
+
 					try {
-						
-						config.reload();
+
+						ConfigManager.reload();
 						sender.sendMessage("§aReload successful, to see changes you must re-login, change world or suicide");
-						
-					} catch (IOException | InvalidConfigurationException ex) {
-						
+
+					} catch (Exception ex) {
+
 						sender.sendMessage("§cCan't reload the plugin");
 						NBSLogger.error("Can't reload the plugin, check your plugin configurations", ex);
-						
+
 					}
-					
+
 				} else {
 					noPermission(sender);
 				}
-				
+
 			} else {
 				helpCommand(label, sender);
 			}
@@ -95,10 +89,10 @@ public class NBS_Command implements CommandExecutor {
 			String world_name = args[1];
 
 			if (sub_command.equalsIgnoreCase(ADD_COMMAND)) { //ADD COMMAND
-				
+
 				if (this.hasPermission(sender, NBS_ADD_PERMISSION)) {
 
-					try {
+					/*try {
 
 						if (config.add_blacklist_world(world_name)) {
 							sender.sendMessage("§aAdded the world §e" + world_name + " §ain the blacklist, to see changes you must re-login, change world or suicide");
@@ -107,21 +101,21 @@ public class NBS_Command implements CommandExecutor {
 						}
 
 					} catch (IOException ioex) {
-						
+
 						sender.sendMessage("The world " + world_name + " can't be added, does the file config.yml exists?");
 						NBSLogger.error("The world " + world_name + " can't be added, does the file config.yml exists?", ioex);
-						
-					}
+
+					}*/
 
 				} else {
 					noPermission(sender);
 				}
 
 			} else if (sub_command.equalsIgnoreCase(REMOVE_COMMAND)) { //REMOVE COMMAND
-				
+
 				if (this.hasPermission(sender, NBS_REMOVE_PERMISSION)) {
 
-					try {
+					/*try {
 
 						if (config.remove_blacklist_world(world_name)) {
 							sender.sendMessage("§aWorld §e" + world_name + " §aremoved from the blacklist, to see changes you must re-login, change world or suicide");
@@ -130,11 +124,11 @@ public class NBS_Command implements CommandExecutor {
 						}
 
 					} catch (IOException ioex) {
-						
+
 						sender.sendMessage("The world " + world_name + " can't be removed, does the file config.yml exists?");
 						NBSLogger.error("The world " + world_name + " can't be removed, does the file config.yml exists?", ioex);
-						
-					}
+
+					}*/
 
 				} else {
 					noPermission(sender);
