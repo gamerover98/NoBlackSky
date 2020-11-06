@@ -1,4 +1,5 @@
 name: NoBlackSky
+api-version: 1.13
 version: ${project.version}
 main: it.gamerover.nbs.NoBlackSky
 description: ${project.description}
