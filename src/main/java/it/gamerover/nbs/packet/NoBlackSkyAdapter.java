@@ -20,6 +20,11 @@ import java.util.Set;
  */
 public class NoBlackSkyAdapter extends PacketAdapter {
 
+	/**
+	 * This world type will fix the black sky under height 61.
+	 */
+	private static final WorldType FLAT_WORLD_TYPE = WorldType.FLAT;
+
 	public NoBlackSkyAdapter(Plugin plugin) {
 		super(plugin, WrapperPlayServerLogin.TYPE, WrapperPlayServerRespawn.TYPE);
 	}
@@ -39,22 +44,27 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 		}
 
 		World world = player.getWorld();
-		WorldType worldType = WorldType.FLAT;
-		PacketContainer packet = event.getPacket();
+		World.Environment environment = world.getEnvironment();
 
+		if (environment != World.Environment.NORMAL) {
+			return;
+		}
+
+		PacketContainer packet = event.getPacket();
+		boolean alwaysEnabled = ConfigManager.isAlwaysEnabled();
 		Set<String> worlds = ConfigManager.getWorlds();
 
-		if (worlds.contains(world.getName())) {
+		if (alwaysEnabled || worlds.contains(world.getName())) {
 
 			if (packetType == WrapperPlayServerLogin.TYPE) { //If packet class equals PACKET_PLAY_OUT_LOGIN
 
 				WrapperPlayServerLogin wrapperPlayServerLogin = new WrapperPlayServerLogin(packet);
-				wrapperPlayServerLogin.setLevelType(worldType);
+				wrapperPlayServerLogin.setLevelType(FLAT_WORLD_TYPE);
 
 			} else if (packetType == WrapperPlayServerRespawn.TYPE) {  //Else if packet class equals PACKET_PLAY_OUT_RESPAWN
 
 				WrapperPlayServerRespawn wrapperPlayServerRespawn = new WrapperPlayServerRespawn(packet);
-				wrapperPlayServerRespawn.setLevelType(worldType);
+				wrapperPlayServerRespawn.setLevelType(FLAT_WORLD_TYPE);
 
 			}
 

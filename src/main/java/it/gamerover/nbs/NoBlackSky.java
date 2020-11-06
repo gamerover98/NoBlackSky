@@ -21,6 +21,7 @@ import lombok.Getter;
  *	is free and it can be used to do more
  *
  */
+@SuppressWarnings("squid:S2696")
 public class NoBlackSky extends JavaPlugin {
 
 	/**
@@ -29,20 +30,23 @@ public class NoBlackSky extends JavaPlugin {
 	@Getter
 	private static NoBlackSky instance;
 
-	/*
-	 * PacketAdapter instance
-	 */
-	@Getter
-	private static NoBlackSkyAdapter nbsPacketAdapter;
-
-	/*
-	 * ProtocolManager instance of ProtocolLib
+	/**
+	 * Gets the ProtocolManager instance of ProtocolLib.
 	 */
 	@Getter
 	private static ProtocolManager protocolManager;
 
+	/**
+	 * The PacketAdapter that edits the login and respawn player packet
+	 * to fix the black sky glitch.
+	 */
+	@Getter
 	private NoBlackSkyAdapter noBlackSkyAdapter;
-	private boolean enable = true;
+
+	/**
+	 * If true, the plugin will execute the onEnable method.
+	 */
+	private boolean isPluginStartable = true;
 
 	@Override
 	public void onLoad() {
@@ -58,8 +62,8 @@ public class NoBlackSky extends JavaPlugin {
 
 		} catch (Exception ex) {
 
-			this.enable = false;
 			PluginLogger.error("An error has occurred while reading config.yml", ex);
+			this.isPluginStartable = false;
 
 		}
 
@@ -68,9 +72,9 @@ public class NoBlackSky extends JavaPlugin {
 	@Override
 	public void onEnable() {
 
-		if (!this.enable) {
+		if (!isPluginStartable) {
 
-			this.disable();
+			disablePlugin();
 			return;
 
 		}
@@ -92,13 +96,13 @@ public class NoBlackSky extends JavaPlugin {
 	public void onDisable() {
 		protocolManager.removePacketListener(this.noBlackSkyAdapter);
 	}
-	
-	/*
-	 * Disable plugin
-	 */
-	private void disable() {
 
-		PluginLogger.info("An error occurred, ##### Disabling NBS #####");
+	/**
+	 * Disable plugin with a warning message.
+	 */
+	private void disablePlugin() {
+
+		PluginLogger.warning("Disabling NoBlackSky " + super.getDescription().getVersion());
 		super.setEnabled(false);
 
 	}
