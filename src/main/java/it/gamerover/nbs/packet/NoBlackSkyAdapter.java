@@ -29,9 +29,9 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 		super(plugin, WrapperPlayServerLogin.TYPE, WrapperPlayServerRespawn.TYPE);
 	}
 
-	/*
-	 * This method lets to edit the worldType of a world when the player join in the server,
-	 * respawn or change world.
+	/**
+	 * Edit the world type of a world when the
+	 * player join into the server, respawn or change world.
 	 */
 	@Override
 	public void onPacketSending(PacketEvent event) {
@@ -56,12 +56,12 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 
 		if (alwaysEnabled || worlds.contains(world.getName())) {
 
-			if (packetType == WrapperPlayServerLogin.TYPE) { //If packet class equals PACKET_PLAY_OUT_LOGIN
+			if (packetType == WrapperPlayServerLogin.TYPE) {
 
 				WrapperPlayServerLogin wrapperPlayServerLogin = new WrapperPlayServerLogin(packet);
 				wrapperPlayServerLogin.setLevelType(FLAT_WORLD_TYPE);
 
-			} else if (packetType == WrapperPlayServerRespawn.TYPE) {  //Else if packet class equals PACKET_PLAY_OUT_RESPAWN
+			} else if (packetType == WrapperPlayServerRespawn.TYPE) {
 
 				WrapperPlayServerRespawn wrapperPlayServerRespawn = new WrapperPlayServerRespawn(packet);
 				wrapperPlayServerRespawn.setLevelType(FLAT_WORLD_TYPE);
