@@ -1,7 +1,5 @@
 package it.gamerover.nbs;
 
-import java.util.Collections;
-
 import it.gamerover.nbs.configuration.ConfigManager;
 import it.gamerover.nbs.packet.NoBlackSkyAdapter;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,6 +10,7 @@ import com.comphenix.protocol.ProtocolManager;
 import it.gamerover.nbs.command.PluginCommand;
 import it.gamerover.nbs.logger.PluginLogger;
 import lombok.Getter;
+import xyz.tozymc.spigot.api.command.CommandController;
 
 /**
  * 
@@ -42,6 +41,18 @@ public class NoBlackSky extends JavaPlugin {
 	 */
 	@Getter
 	private NoBlackSkyAdapter noBlackSkyAdapter;
+
+	/**
+	 * Gets the command controller instance.
+	 */
+	@Getter
+	private CommandController commandController;
+
+	/**
+	 * Gets the main plugin command.
+	 */
+	@Getter
+	private PluginCommand pluginCommand;
 
 	/**
 	 * If true, the plugin will execute the onEnable method.
@@ -79,11 +90,8 @@ public class NoBlackSky extends JavaPlugin {
 
 		}
 
-		//The NoBlackSky command
-		org.bukkit.command.PluginCommand nbsCommand = getInstance().getCommand("NoBlackSky");
-
-		nbsCommand.setExecutor(new PluginCommand());
-		nbsCommand.setAliases(Collections.singletonList("nbs"));
+		commandController = new CommandController(this);
+		pluginCommand = new PluginCommand(commandController);
 
 		this.noBlackSkyAdapter = new NoBlackSkyAdapter(instance);
 		

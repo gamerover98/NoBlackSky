@@ -1,171 +1,88 @@
 package it.gamerover.nbs.command;
 
-import java.util.Set;
-
-import it.gamerover.nbs.configuration.ConfigManager;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 
-import it.gamerover.nbs.logger.PluginLogger;
+import org.jetbrains.annotations.NotNull;
+import xyz.tozymc.spigot.api.command.CombinedCommand;
+import xyz.tozymc.spigot.api.command.CommandController;
+import xyz.tozymc.spigot.api.command.result.CommandResult;
+import xyz.tozymc.spigot.api.command.result.TabResult;
+import xyz.tozymc.spigot.api.util.bukkit.permission.PermissionWrapper;
 
 /**
- *
  * @author gamerover98
- *
+ * The plugin main command.
  */
-public class PluginCommand implements CommandExecutor {
+public class PluginCommand extends CombinedCommand {
 
-	private static final String ADD_COMMAND = "add";
-	private static final String REMOVE_COMMAND = "remove";
-	private static final String LIST_COMMAND = "list";
-	private static final String RELOAD_COMMAND = "reload";
+	public static final String PERMISSION = "nbs";
 
-	private static final String NBS_PERMISSION = "nbs.";
-	private static final String NBS_ADD_PERMISSION = NBS_PERMISSION + "add";
-	private static final String NBS_REMOVE_PERMISSION = NBS_PERMISSION + "remove";
-	private static final String NBS_LIST_PERMISSION = NBS_PERMISSION + "list";
-	private static final String NBS_RELOAD_PERMISSION = NBS_PERMISSION + "reload";
+	private static final String COMMAND = "NoBlackSky";
+	private static final String ALIAS   = "nbs";
 
+	private final CommandController commandController;
+
+	public PluginCommand(@NotNull CommandController commandController) {
+
+		super(COMMAND, ALIAS);
+		this.commandController = commandController;
+
+		commandController.addCommand(this);
+		commandController.addCommand(new AddWorldCommand(this));
+		commandController.addCommand(new RemoveWorldCommand(this));
+		commandController.addCommand(new ListCommand(this));
+		commandController.addCommand(new ReloadCommand(this));
+
+	}
+
+	@NotNull
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public CommandResult onCommand(@NotNull CommandSender sender, @NotNull String[] params) {
 
-		if (args.length == 0) {
-			this.helpCommand(label, sender);
-		} else if (args.length == 1) {
+		StringBuilder messageBuilder = new StringBuilder();
 
-			String sub_command = args[0];
+		commandController.getCommands().computeIfPresent(this, (cmd, subCommand) -> {
 
-			if (sub_command.equalsIgnoreCase(LIST_COMMAND)) { //LIST COMMAND
+			subCommand.forEach(c -> messageBuilder
+					.append("§f").append(c.getSyntax())
+					.append("§7").append(" - ")
+					.append(c.getDescription())
+					.append("\n"));
 
-				if (this.hasPermission(sender, NBS_LIST_PERMISSION)) {
+			return subCommand;
 
-					Set<String> worlds = ConfigManager.getWorlds();
+		});
 
-					if (worlds.isEmpty()) {
-						sender.sendMessage("§cBlacklist is empty");
-					} else {
+		String message = messageBuilder.toString();
 
-						sender.sendMessage("§5BlackListed worlds");
+		sender.sendMessage("\n" + message);
 
-						for (String world_name : worlds) {
-							sender.sendMessage("§a - §e" + world_name);
-						}
-
-					}
-
-				} else {
-					noPermission(sender);
-				}
-
-			} else if (sub_command.equalsIgnoreCase(RELOAD_COMMAND)) { // RELOAD COMMAND
-
-				if (this.hasPermission(sender, NBS_RELOAD_PERMISSION)) {
-
-					try {
-
-						ConfigManager.reload();
-						sender.sendMessage("§aReload successful, to see changes you must re-login, change world or suicide");
-
-					} catch (Exception ex) {
-
-						sender.sendMessage("§cCan't reload the plugin");
-						PluginLogger.error("Can't reload the plugin, check your plugin configurations", ex);
-
-					}
-
-				} else {
-					noPermission(sender);
-				}
-
-			} else {
-				helpCommand(label, sender);
-			}
-
-
-		} else if (args.length > 1) {
-
-			String sub_command = args[0];
-			String world_name = args[1];
-
-			if (sub_command.equalsIgnoreCase(ADD_COMMAND)) { //ADD COMMAND
-
-				if (this.hasPermission(sender, NBS_ADD_PERMISSION)) {
-
-					/*try {
-
-						if (config.add_blacklist_world(world_name)) {
-							sender.sendMessage("§aAdded the world §e" + world_name + " §ain the blacklist, to see changes you must re-login, change world or suicide");
-						} else {
-							sender.sendMessage("§c" + world_name + " §aalready exists");
-						}
-
-					} catch (IOException ioex) {
-
-						sender.sendMessage("The world " + world_name + " can't be added, does the file config.yml exists?");
-						NBSLogger.error("The world " + world_name + " can't be added, does the file config.yml exists?", ioex);
-
-					}*/
-
-				} else {
-					noPermission(sender);
-				}
-
-			} else if (sub_command.equalsIgnoreCase(REMOVE_COMMAND)) { //REMOVE COMMAND
-
-				if (this.hasPermission(sender, NBS_REMOVE_PERMISSION)) {
-
-					/*try {
-
-						if (config.remove_blacklist_world(world_name)) {
-							sender.sendMessage("§aWorld §e" + world_name + " §aremoved from the blacklist, to see changes you must re-login, change world or suicide");
-						} else {
-							sender.sendMessage("§cCan't remove the world " + world_name);
-						}
-
-					} catch (IOException ioex) {
-
-						sender.sendMessage("The world " + world_name + " can't be removed, does the file config.yml exists?");
-						NBSLogger.error("The world " + world_name + " can't be removed, does the file config.yml exists?", ioex);
-
-					}*/
-
-				} else {
-					noPermission(sender);
-				}
-
-			} else {
-				this.noPermission(sender);
-			}
-
-		}
-
-		return true;
+		return CommandResult.SUCCESS;
 
 	}
 
-	private void helpCommand(String label, CommandSender sender) {
-
-		label = "§c/" + label + " §a";
-		int permLength = 5;
-
-		if (sender.hasPermission(NBS_ADD_PERMISSION)) sender.sendMessage(label + "add <world name> §8| §6Add a world in the blacklist"); else permLength--;
-		if (sender.hasPermission(NBS_REMOVE_PERMISSION)) sender.sendMessage(label + "remove <world name> §8| §6Remove a world from the blacklist"); else permLength--;
-		if (sender.hasPermission(NBS_LIST_PERMISSION)) sender.sendMessage(label + "list §8| §6Show blacklisted worlds"); else permLength--;
-		if (sender.hasPermission(NBS_RELOAD_PERMISSION)) sender.sendMessage(label + "reload §8| §6Reload the config.yml"); else permLength--;
-
-		if (permLength <= 0) {
-			this.noPermission(sender);
-		}
-
+	@NotNull
+	@Override
+	public TabResult onTab(@NotNull CommandSender sender, @NotNull String[] params) {
+		return TabResult.EMPTY_RESULT;
 	}
 
-	private boolean hasPermission(CommandSender sender, String permission) {
-		return sender.hasPermission(permission);
+	@NotNull
+	@Override
+	public PermissionWrapper getPermission() {
+		return PermissionWrapper.of(PERMISSION);
 	}
 
-	private void noPermission(CommandSender sender) {
-		sender.sendMessage("§cYou don't have permission to perform this command.");
+	@NotNull
+	@Override
+	public String getSyntax() {
+		return "";
+	}
+
+	@NotNull
+	@Override
+	public String getDescription() {
+		return "No black sky in worlds";
 	}
 
 }

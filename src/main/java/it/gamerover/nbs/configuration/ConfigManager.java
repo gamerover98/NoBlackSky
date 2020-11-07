@@ -4,10 +4,12 @@ import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.SettingsManagerBuilder;
 import it.gamerover.nbs.NoBlackSky;
 import it.gamerover.nbs.configuration.holder.ConfigHolder;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 
 /**
@@ -79,6 +81,65 @@ public class ConfigManager {
 
         assert settingsManager != null;
         return Collections.unmodifiableSet(settingsManager.getProperty(ConfigHolder.WORLDS));
+
+    }
+
+    /**
+     * @param worldName The world name.
+     * @return True if the world name is already contained into the config list.
+     */
+    public static boolean containsWorld(@NotNull String worldName) {
+        return getWorlds().stream().anyMatch(name -> name.equals(worldName));
+    }
+
+    /**
+     * @param worldName The world name.
+     * @return True if the world name is added into the config file,
+     *         False if it is already contained.
+     */
+    public static boolean addWorld(@NotNull String worldName) {
+
+        if (worldName.isEmpty()) {
+            throw new IllegalArgumentException("The world name argument cannot be empty");
+        }
+
+        if (containsWorld(worldName)) {
+            return false;
+        }
+
+        assert settingsManager != null;
+        Set<String> worlds = new HashSet<>(getWorlds());
+        worlds.add(worldName);
+
+        settingsManager.setProperty(ConfigHolder.WORLDS, worlds);
+        settingsManager.save();
+
+        return true;
+
+    }
+
+    /**
+     * @param worldName The world name.
+     * @return True if the world name is removed from the config file,
+     *         False if isn't contained.
+     */
+    public static boolean removeWorld(@NotNull String worldName) {
+
+        if (worldName.isEmpty()) {
+            throw new IllegalArgumentException("The world name argument cannot be empty");
+        }
+
+        if (!containsWorld(worldName)) {
+            return false;
+        }
+
+        assert settingsManager != null;
+        Set<String> worlds = new HashSet<>(getWorlds());
+        worlds.remove(worldName);
+
+        settingsManager.setProperty(ConfigHolder.WORLDS, worlds);
+        settingsManager.save();
+        return true;
 
     }
 
