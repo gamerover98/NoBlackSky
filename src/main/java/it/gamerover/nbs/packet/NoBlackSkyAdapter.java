@@ -9,6 +9,7 @@ import it.gamerover.nbs.util.GenericUtil;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
 
 import com.comphenix.protocol.PacketType;
@@ -23,6 +24,12 @@ import java.util.Set;
  * @author gamerover98
  */
 public class NoBlackSkyAdapter extends PacketAdapter {
+
+	/**
+	 * ParadiseLand's package to auto-manage its worlds.
+	 * https://www.spigotmc.org/resources/paradise-land-1-8-8-1-16-x-skyworld-generator.28056/
+	 */
+	private static final String PARADISE_LAND_PACKAGE = "it.gamerover.paradise";
 
 	/**
 	 * Since 1.16 the packets of Join Game and Respawn were edited.
@@ -75,11 +82,13 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 		String serverVersion = NoBlackSky.getReflectionContainer()
 				.getMinecraft().getMinecraftServer().getVersion();
 
-		PacketContainer packet = event.getPacket();
 		boolean alwaysEnabled = ConfigManager.isAlwaysEnabled();
+		boolean isParadiseWorld = isParadiseLandWorld(world);
+
+		PacketContainer packet = event.getPacket();
 		Set<String> worlds = ConfigManager.getWorlds();
 
-		if (alwaysEnabled || worlds.contains(world.getName())) {
+		if (alwaysEnabled || isParadiseWorld || worlds.contains(world.getName())) {
 
 			GenericUtil.Comparison comparison = GenericUtil
 					.compareServerVersions(serverVersion, V1_16);
@@ -91,6 +100,15 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 			}
 
 		}
+
+	}
+
+	private boolean isParadiseLandWorld(@NotNull World world) {
+
+		ChunkGenerator chunkGenerator = world.getGenerator();
+		String className = chunkGenerator.getClass().getName();
+
+		return className.startsWith(PARADISE_LAND_PACKAGE);
 
 	}
 
