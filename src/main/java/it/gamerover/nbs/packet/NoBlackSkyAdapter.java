@@ -2,6 +2,7 @@ package it.gamerover.nbs.packet;
 
 import com.comphenix.packetwrapper.WrapperPlayServerLogin;
 import com.comphenix.packetwrapper.WrapperPlayServerRespawn;
+import com.comphenix.protocol.reflect.StructureModifier;
 import it.gamerover.nbs.NoBlackSky;
 import it.gamerover.nbs.configuration.ConfigManager;
 import it.gamerover.nbs.util.GenericUtil;
@@ -24,15 +25,27 @@ import java.util.Set;
 public class NoBlackSkyAdapter extends PacketAdapter {
 
 	/**
-	 * Since 1.16 the packets of PlayLogin and Respawn were edited.
+	 * Since 1.16 the packets of Join Game and Respawn were edited.
 	 * This string helps to edit correctly these packets.
 	 */
 	private static final String V1_16 = "1.16";
 
 	/**
 	 * This world type will fix the black sky under height 61.
+	 * Wiki at: https://wiki.vg/Protocol#Join_Game
 	 */
 	private static final WorldType FLAT_WORLD_TYPE = WorldType.FLAT;
+
+	/**
+	 * isFlat field on the 1.16+ packet is at index 4.
+	 * Wiki at: https://wiki.vg/Protocol#Respawn
+	 */
+	private static final int LOGIN_IS_FLAT_BOOLEAN_FIELD_INDEX = 4;
+
+	/**
+	 * isFlat field on the 1.16+ packet is at index 4.
+	 */
+	private static final int RESPAWN_IS_FLAT_BOOLEAN_FIELD_INDEX = 1;
 
 	public NoBlackSkyAdapter(Plugin plugin) {
 		super(plugin, WrapperPlayServerLogin.TYPE, WrapperPlayServerRespawn.TYPE);
@@ -68,7 +81,8 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 
 		if (alwaysEnabled || worlds.contains(world.getName())) {
 
-			GenericUtil.Comparison comparison = GenericUtil.compareServerVersions(serverVersion, V1_16);
+			GenericUtil.Comparison comparison = GenericUtil
+					.compareServerVersions(serverVersion, V1_16);
 
 			if (comparison == GenericUtil.Comparison.MINOR) {
 				beforeNetherUpdate(packetType, packet);
@@ -82,15 +96,17 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 
 	private void afterNetherUpdate(@NotNull PacketType packetType, @NotNull PacketContainer packet) {
 
-		getPlugin().getLogger().info("after");
-		//TODO implementation
+		StructureModifier<Boolean> booleans = packet.getBooleans();
+
+		if (packetType == PacketType.Play.Server.LOGIN) {
+			booleans.write(LOGIN_IS_FLAT_BOOLEAN_FIELD_INDEX, true);
+		} else if (packetType == PacketType.Play.Server.RESPAWN) {
+			booleans.write(RESPAWN_IS_FLAT_BOOLEAN_FIELD_INDEX, true);
+		}
 
 	}
 
 	private void beforeNetherUpdate(@NotNull PacketType packetType, @NotNull PacketContainer packet) {
-
-		getPlugin().getLogger().info("before");
-		//TODO remove the above test print
 
 		if (packetType == WrapperPlayServerLogin.TYPE) {
 
