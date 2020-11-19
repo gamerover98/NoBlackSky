@@ -106,8 +106,12 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 	private boolean isParadiseLandWorld(@NotNull World world) {
 
 		ChunkGenerator chunkGenerator = world.getGenerator();
-		String className = chunkGenerator.getClass().getName();
 
+		if (chunkGenerator == null) {
+			return false;
+		}
+
+		String className = chunkGenerator.getClass().getName();
 		return className.startsWith(PARADISE_LAND_PACKAGE);
 
 	}
