@@ -2,6 +2,8 @@ package it.gamerover.nbs;
 
 import it.gamerover.nbs.configuration.ConfigManager;
 import it.gamerover.nbs.packet.NoBlackSkyAdapter;
+import it.gamerover.nbs.reflection.ReflectionContainer;
+import it.gamerover.nbs.reflection.ReflectionException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.comphenix.protocol.ProtocolLibrary;
@@ -28,6 +30,12 @@ public class NoBlackSky extends JavaPlugin {
 	 */
 	@Getter
 	private static NoBlackSky instance;
+
+	/**
+	 * Gets the reflection container instance.
+	 */
+	@Getter
+	private static ReflectionContainer reflectionContainer;
 
 	/**
 	 * Gets the ProtocolManager instance of ProtocolLib.
@@ -69,7 +77,13 @@ public class NoBlackSky extends JavaPlugin {
 
 		try {
 
+			reflectionContainer = new ReflectionContainer();
 			ConfigManager.reload();
+
+		} catch (ReflectionException reflectionException) {
+
+			PluginLogger.error("A reflection error has occurred while loading", reflectionException);
+			this.isPluginStartable = false;
 
 		} catch (Exception ex) {
 
