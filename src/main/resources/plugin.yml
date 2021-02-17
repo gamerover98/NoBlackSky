@@ -6,7 +6,3 @@ description: ${project.description}
 website: https://www.spigotmc.org/resources/authors/gamerover98.27106/
 author: gamerover98
 depend: [ProtocolLib]
-commands:
-   NoBlackSky:
-     description: No black sky in worlds
-     aliases: [nbs]
