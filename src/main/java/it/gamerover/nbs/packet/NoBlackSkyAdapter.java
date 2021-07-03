@@ -2,6 +2,7 @@ package it.gamerover.nbs.packet;
 
 import com.comphenix.packetwrapper.WrapperPlayServerLogin;
 import com.comphenix.packetwrapper.WrapperPlayServerRespawn;
+import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.reflect.StructureModifier;
 import it.gamerover.nbs.NoBlackSky;
 import it.gamerover.nbs.configuration.ConfigManager;
@@ -55,7 +56,10 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 	private static final int RESPAWN_IS_FLAT_BOOLEAN_FIELD_INDEX = 1;
 
 	public NoBlackSkyAdapter(Plugin plugin) {
-		super(plugin, WrapperPlayServerLogin.TYPE, WrapperPlayServerRespawn.TYPE);
+		super(new AdapterParameteters()
+				.plugin(plugin)
+				.types(WrapperPlayServerLogin.TYPE, WrapperPlayServerRespawn.TYPE)
+				.listenerPriority(ListenerPriority.HIGHEST));
 	}
 
 	/**
