@@ -62,14 +62,14 @@
 
         <!-- PROJECT LIBS -->
 
-        <!--<dependency>
+        <dependency>
             <groupId>it.gamerover.noblacksky</groupId>
             <artifactId>NoBlackSky-Reflection</artifactId>
             <version>2.3</version>
             <scope>compile</scope>
         </dependency>
 
-        <dependency>
+        <!--<dependency>
             <groupId>it.gamerover.noblacksky</groupId>
             <artifactId>NoBlackSky-Config</artifactId>
             <version>2.3</version>
