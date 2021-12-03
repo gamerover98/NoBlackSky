@@ -63,7 +63,7 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 	}
 
 	/**
-	 * Edit the world type of a world when the
+	 * Edit the world type of world when the
 	 * player join into the server, respawn or change world.
 	 */
 	@Override
@@ -85,6 +85,11 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 
 		String serverVersion = NoBlackSky.getReflectionContainer()
 				.getMinecraft().getMinecraftServer().getVersion();
+
+		// TO-DO: fix this.
+		if (serverVersion == null) {
+			return;
+		}
 
 		boolean alwaysEnabled = ConfigManager.isAlwaysEnabled();
 		boolean isParadiseWorld = isParadiseLandWorld(world);

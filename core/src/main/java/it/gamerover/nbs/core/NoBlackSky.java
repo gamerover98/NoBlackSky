@@ -2,8 +2,8 @@ package it.gamerover.nbs.core;
 
 import it.gamerover.nbs.core.configuration.ConfigManager;
 import it.gamerover.nbs.core.packet.NoBlackSkyAdapter;
-import it.gamerover.nbs.core.reflection.ReflectionContainer;
-import it.gamerover.nbs.core.reflection.ReflectionException;
+import it.gamerover.nbs.reflection.ReflectionContainer;
+import it.gamerover.nbs.reflection.ReflectionException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.comphenix.protocol.ProtocolLibrary;
