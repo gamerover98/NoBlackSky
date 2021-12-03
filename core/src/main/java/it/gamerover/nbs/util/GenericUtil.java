@@ -93,7 +93,6 @@ public final class GenericUtil {
      * @param serverVersion The not null string of server version.
      * @return An array of each server version number. (ex: 1.16 -> [1, 16])
      */
-    @NotNull
     private static int[] splitMinecraftServerVersion(@NotNull String serverVersion) {
 
         if (serverVersion.isEmpty()) {

@@ -1,6 +1,5 @@
 package it.gamerover.nbs.reflection;
 
-@SuppressWarnings("serial")
 public class ReflectionException extends Exception {
 
     /**

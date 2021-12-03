@@ -18,9 +18,7 @@ import xyz.tozymc.spigot.api.command.CommandController;
  * 
  * @author gamerover98
  *
- *	This, like all the classes of the project WorldTypeChanger
- *	is free and it can be used to do more
- *
+ * The main class of the project.
  */
 @SuppressWarnings("squid:S2696")
 public class NoBlackSky extends JavaPlugin {
