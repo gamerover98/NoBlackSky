@@ -1,9 +1,9 @@
-package it.gamerover.nbs.core.configuration;
+package it.gamerover.nbs.config;
 
 import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.SettingsManagerBuilder;
-import it.gamerover.nbs.core.NoBlackSky;
-import it.gamerover.nbs.core.configuration.holder.ConfigHolder;
+import it.gamerover.nbs.config.holder.ConfigHolder;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,10 +36,9 @@ public class ConfigManager {
 
     /**
      * Reload or load the configuration file.
+     * @param plugin The not-null NoBlackSky plugin instance.
      */
-    public static void reload() {
-
-        NoBlackSky plugin = NoBlackSky.getInstance();
+    public static void reload(@NotNull Plugin plugin) {
 
         if (settingsManager == null) {
 
@@ -97,6 +96,7 @@ public class ConfigManager {
      * @return True if the world name is added into the config file,
      *         False if it is already contained.
      */
+    @SuppressWarnings("DuplicatedCode") // similar to the removeWorld() method.
     public static boolean addWorld(@NotNull String worldName) {
 
         if (worldName.isEmpty()) {
@@ -123,6 +123,7 @@ public class ConfigManager {
      * @return True if the world name is removed from the config file,
      *         False if isn't contained.
      */
+    @SuppressWarnings("DuplicatedCode") // similar to the addWorld() method.
     public static boolean removeWorld(@NotNull String worldName) {
 
         if (worldName.isEmpty()) {
@@ -142,6 +143,10 @@ public class ConfigManager {
         return true;
 
     }
+
+    //
+    // PRIVATE METHODS
+    //
 
     /**
      * @throws IllegalStateException If the settings manager instance is null,
