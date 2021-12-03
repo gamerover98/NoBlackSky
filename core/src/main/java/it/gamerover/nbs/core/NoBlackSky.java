@@ -1,6 +1,6 @@
 package it.gamerover.nbs.core;
 
-import it.gamerover.nbs.core.configuration.ConfigManager;
+import it.gamerover.nbs.config.ConfigManager;
 import it.gamerover.nbs.core.packet.NoBlackSkyAdapter;
 import it.gamerover.nbs.reflection.ReflectionContainer;
 import it.gamerover.nbs.reflection.ReflectionException;
@@ -76,7 +76,7 @@ public class NoBlackSky extends JavaPlugin {
 		try {
 
 			reflectionContainer = new ReflectionContainer();
-			ConfigManager.reload();
+			ConfigManager.reload(this);
 
 		} catch (ReflectionException reflectionException) {
 

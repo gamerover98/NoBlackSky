@@ -4,8 +4,8 @@ import com.comphenix.packetwrapper.WrapperPlayServerLogin;
 import com.comphenix.packetwrapper.WrapperPlayServerRespawn;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.reflect.StructureModifier;
+import it.gamerover.nbs.config.ConfigManager;
 import it.gamerover.nbs.core.NoBlackSky;
-import it.gamerover.nbs.core.configuration.ConfigManager;
 import it.gamerover.nbs.core.util.GenericUtil;
 import org.bukkit.World;
 import org.bukkit.WorldType;
@@ -86,7 +86,7 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 		String serverVersion = NoBlackSky.getReflectionContainer()
 				.getMinecraft().getMinecraftServer().getVersion();
 
-		// TO-DO: fix this.
+		// TO-DO: temporary solution.
 		if (serverVersion == null) {
 			return;
 		}

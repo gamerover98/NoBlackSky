@@ -1,7 +1,9 @@
 package it.gamerover.nbs.core.command;
 
-import it.gamerover.nbs.core.configuration.ConfigManager;
+import it.gamerover.nbs.config.ConfigManager;
+import it.gamerover.nbs.core.NoBlackSky;
 import org.bukkit.command.CommandSender;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import xyz.tozymc.spigot.api.command.CombinedCommand;
 import xyz.tozymc.spigot.api.command.Command;
@@ -23,7 +25,10 @@ public class ReloadCommand extends CombinedCommand {
     @Override
     public CommandResult onCommand(@NotNull CommandSender sender, @NotNull String[] params) {
 
-        ConfigManager.reload();
+        //TODO: temporary solution.
+        Plugin plugin = NoBlackSky.getInstance();
+
+        ConfigManager.reload(plugin);
         sender.sendMessage("§aSuccessful reload");
 
         return CommandResult.SUCCESS;

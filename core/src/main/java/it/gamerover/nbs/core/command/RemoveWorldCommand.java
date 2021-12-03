@@ -1,6 +1,6 @@
 package it.gamerover.nbs.core.command;
 
-import it.gamerover.nbs.core.configuration.ConfigManager;
+import it.gamerover.nbs.config.ConfigManager;
 import it.gamerover.nbs.core.logger.PluginLogger;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;

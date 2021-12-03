@@ -5,7 +5,7 @@ import org.jetbrains.annotations.NotNull;
 public final class GenericUtil {
 
     /**
-     * Noting to say, it is a dot.
+     * Nothing to say, it is a dot.
      */
     private static final String DOT = "\\.";
 
