@@ -1,6 +1,6 @@
-package it.gamerover.nbs.command;
+package it.gamerover.nbs.core.command;
 
-import it.gamerover.nbs.configuration.ConfigManager;
+import it.gamerover.nbs.core.configuration.ConfigManager;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import xyz.tozymc.spigot.api.command.CombinedCommand;
@@ -9,13 +9,16 @@ import xyz.tozymc.spigot.api.command.result.CommandResult;
 import xyz.tozymc.spigot.api.command.result.TabResult;
 import xyz.tozymc.spigot.api.util.bukkit.permission.PermissionWrapper;
 
-public class ReloadCommand extends CombinedCommand {
+import java.util.Set;
+import java.util.StringJoiner;
 
-    public static final String PERMISSION = PluginCommand.PERMISSION + ".reload";
+public class ListCommand extends CombinedCommand {
 
-    private static final String COMMAND = "reload";
+    public static final String PERMISSION = PluginCommand.PERMISSION + ".list";
 
-    public ReloadCommand(@NotNull Command parent) {
+    private static final String COMMAND = "list";
+
+    public ListCommand(@NotNull Command parent) {
         super(parent, COMMAND);
     }
 
@@ -23,8 +26,18 @@ public class ReloadCommand extends CombinedCommand {
     @Override
     public CommandResult onCommand(@NotNull CommandSender sender, @NotNull String[] params) {
 
-        ConfigManager.reload();
-        sender.sendMessage("§aSuccessful reload");
+        Set<String> worlds = ConfigManager.getWorlds();
+
+        if (worlds.isEmpty()) {
+            sender.sendMessage("§aThere are no worlds into the config list");
+        } else {
+
+            StringJoiner joiner = new StringJoiner("§a, §e");
+            worlds.forEach(joiner::add);
+
+            sender.sendMessage("§aList of world from config: §e" + joiner);
+
+        }
 
         return CommandResult.SUCCESS;
 
@@ -57,7 +70,7 @@ public class ReloadCommand extends CombinedCommand {
     @NotNull
     @Override
     public String getDescription() {
-        return "Reload the config file";
+        return "List of config worlds";
     }
 
 }

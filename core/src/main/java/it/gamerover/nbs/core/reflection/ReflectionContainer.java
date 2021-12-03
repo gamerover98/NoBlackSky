@@ -1,7 +1,7 @@
-package it.gamerover.nbs.reflection;
+package it.gamerover.nbs.core.reflection;
 
-import it.gamerover.nbs.reflection.craftbukkit.CBCraftServer;
-import it.gamerover.nbs.reflection.minecraft.MCMinecraftServer;
+import it.gamerover.nbs.core.reflection.craftbukkit.CBCraftServer;
+import it.gamerover.nbs.core.reflection.minecraft.MCMinecraftServer;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;

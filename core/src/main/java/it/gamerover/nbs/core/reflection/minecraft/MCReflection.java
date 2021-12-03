@@ -1,7 +1,7 @@
-package it.gamerover.nbs.reflection.minecraft;
+package it.gamerover.nbs.core.reflection.minecraft;
 
-import it.gamerover.nbs.reflection.Reflection;
-import it.gamerover.nbs.reflection.ReflectionException;
+import it.gamerover.nbs.core.reflection.Reflection;
+import it.gamerover.nbs.core.reflection.ReflectionException;
 import org.jetbrains.annotations.NotNull;
 
 /**

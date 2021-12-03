@@ -1,16 +1,16 @@
-package it.gamerover.nbs;
+package it.gamerover.nbs.core;
 
-import it.gamerover.nbs.configuration.ConfigManager;
-import it.gamerover.nbs.packet.NoBlackSkyAdapter;
-import it.gamerover.nbs.reflection.ReflectionContainer;
-import it.gamerover.nbs.reflection.ReflectionException;
+import it.gamerover.nbs.core.configuration.ConfigManager;
+import it.gamerover.nbs.core.packet.NoBlackSkyAdapter;
+import it.gamerover.nbs.core.reflection.ReflectionContainer;
+import it.gamerover.nbs.core.reflection.ReflectionException;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
-import it.gamerover.nbs.command.PluginCommand;
-import it.gamerover.nbs.logger.PluginLogger;
+import it.gamerover.nbs.core.command.PluginCommand;
+import it.gamerover.nbs.core.logger.PluginLogger;
 import lombok.Getter;
 import xyz.tozymc.spigot.api.command.CommandController;
 

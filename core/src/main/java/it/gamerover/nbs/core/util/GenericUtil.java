@@ -1,4 +1,4 @@
-package it.gamerover.nbs.util;
+package it.gamerover.nbs.core.util;
 
 import org.jetbrains.annotations.NotNull;
 

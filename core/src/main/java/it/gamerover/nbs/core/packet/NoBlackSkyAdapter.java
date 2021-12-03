@@ -1,12 +1,12 @@
-package it.gamerover.nbs.packet;
+package it.gamerover.nbs.core.packet;
 
 import com.comphenix.packetwrapper.WrapperPlayServerLogin;
 import com.comphenix.packetwrapper.WrapperPlayServerRespawn;
 import com.comphenix.protocol.events.ListenerPriority;
 import com.comphenix.protocol.reflect.StructureModifier;
-import it.gamerover.nbs.NoBlackSky;
-import it.gamerover.nbs.configuration.ConfigManager;
-import it.gamerover.nbs.util.GenericUtil;
+import it.gamerover.nbs.core.NoBlackSky;
+import it.gamerover.nbs.core.configuration.ConfigManager;
+import it.gamerover.nbs.core.util.GenericUtil;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;

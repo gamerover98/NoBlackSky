@@ -1,6 +1,6 @@
-package it.gamerover.nbs.command;
+package it.gamerover.nbs.core.command;
 
-import it.gamerover.nbs.configuration.ConfigManager;
+import it.gamerover.nbs.core.configuration.ConfigManager;
 import org.bukkit.command.CommandSender;
 import org.jetbrains.annotations.NotNull;
 import xyz.tozymc.spigot.api.command.CombinedCommand;
@@ -9,16 +9,13 @@ import xyz.tozymc.spigot.api.command.result.CommandResult;
 import xyz.tozymc.spigot.api.command.result.TabResult;
 import xyz.tozymc.spigot.api.util.bukkit.permission.PermissionWrapper;
 
-import java.util.Set;
-import java.util.StringJoiner;
+public class ReloadCommand extends CombinedCommand {
 
-public class ListCommand extends CombinedCommand {
+    public static final String PERMISSION = PluginCommand.PERMISSION + ".reload";
 
-    public static final String PERMISSION = PluginCommand.PERMISSION + ".list";
+    private static final String COMMAND = "reload";
 
-    private static final String COMMAND = "list";
-
-    public ListCommand(@NotNull Command parent) {
+    public ReloadCommand(@NotNull Command parent) {
         super(parent, COMMAND);
     }
 
@@ -26,18 +23,8 @@ public class ListCommand extends CombinedCommand {
     @Override
     public CommandResult onCommand(@NotNull CommandSender sender, @NotNull String[] params) {
 
-        Set<String> worlds = ConfigManager.getWorlds();
-
-        if (worlds.isEmpty()) {
-            sender.sendMessage("§aThere are no worlds into the config list");
-        } else {
-
-            StringJoiner joiner = new StringJoiner("§a, §e");
-            worlds.forEach(joiner::add);
-
-            sender.sendMessage("§aList of world from config: §e" + joiner);
-
-        }
+        ConfigManager.reload();
+        sender.sendMessage("§aSuccessful reload");
 
         return CommandResult.SUCCESS;
 
@@ -70,7 +57,7 @@ public class ListCommand extends CombinedCommand {
     @NotNull
     @Override
     public String getDescription() {
-        return "List of config worlds";
+        return "Reload the config file";
     }
 
 }

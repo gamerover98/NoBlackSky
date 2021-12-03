@@ -1,9 +1,9 @@
-package it.gamerover.nbs.configuration.holder;
+package it.gamerover.nbs.core.configuration.holder;
 
 import ch.jalu.configme.Comment;
 import ch.jalu.configme.SettingsHolder;
 import ch.jalu.configme.properties.BooleanProperty;
-import it.gamerover.nbs.configuration.property.StringSetProperty;
+import it.gamerover.nbs.core.configuration.property.StringSetProperty;
 
 /**
  * @author gamerover98

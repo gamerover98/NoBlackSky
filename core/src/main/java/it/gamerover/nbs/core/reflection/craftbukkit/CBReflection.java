@@ -1,7 +1,7 @@
-package it.gamerover.nbs.reflection.craftbukkit;
+package it.gamerover.nbs.core.reflection.craftbukkit;
 
-import it.gamerover.nbs.reflection.Reflection;
-import it.gamerover.nbs.reflection.ReflectionException;
+import it.gamerover.nbs.core.reflection.Reflection;
+import it.gamerover.nbs.core.reflection.ReflectionException;
 
 public class CBReflection extends Reflection {
 

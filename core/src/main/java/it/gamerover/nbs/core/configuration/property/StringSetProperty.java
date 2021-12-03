@@ -1,4 +1,4 @@
-package it.gamerover.nbs.configuration.property;
+package it.gamerover.nbs.core.configuration.property;
 
 import ch.jalu.configme.properties.SetProperty;
 import ch.jalu.configme.properties.types.PrimitivePropertyType;

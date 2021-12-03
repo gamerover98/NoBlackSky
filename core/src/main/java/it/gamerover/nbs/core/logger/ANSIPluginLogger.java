@@ -1,4 +1,4 @@
-package it.gamerover.nbs.logger;
+package it.gamerover.nbs.core.logger;
 
 import java.util.logging.Level;
 

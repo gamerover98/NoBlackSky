@@ -1,9 +1,9 @@
-package it.gamerover.nbs.configuration;
+package it.gamerover.nbs.core.configuration;
 
 import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.SettingsManagerBuilder;
-import it.gamerover.nbs.NoBlackSky;
-import it.gamerover.nbs.configuration.holder.ConfigHolder;
+import it.gamerover.nbs.core.NoBlackSky;
+import it.gamerover.nbs.core.configuration.holder.ConfigHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 

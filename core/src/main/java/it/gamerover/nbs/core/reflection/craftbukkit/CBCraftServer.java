@@ -1,8 +1,8 @@
-package it.gamerover.nbs.reflection.craftbukkit;
+package it.gamerover.nbs.core.reflection.craftbukkit;
 
 import java.lang.reflect.Method;
 
-import it.gamerover.nbs.reflection.ReflectionException;
+import it.gamerover.nbs.core.reflection.ReflectionException;
 import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;

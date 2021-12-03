@@ -1,4 +1,4 @@
-package it.gamerover.nbs.command;
+package it.gamerover.nbs.core.command;
 
 import org.bukkit.command.CommandSender;
 

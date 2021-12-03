@@ -1,4 +1,4 @@
-package it.gamerover.nbs.reflection;
+package it.gamerover.nbs.core.reflection;
 
 import org.jetbrains.annotations.NotNull;
 
