@@ -10,7 +10,8 @@
     <packaging>pom</packaging>
 
 	<modules>
-		<module>core</module>
+        <module>reflection</module>
+        <module>core</module>
 		<module>deploy</module>
 	</modules>
 
