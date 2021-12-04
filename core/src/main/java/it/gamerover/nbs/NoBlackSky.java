@@ -1,4 +1,4 @@
-package it.gamerover.nbs.core;
+package it.gamerover.nbs;
 
 import it.gamerover.nbs.config.ConfigManager;
 import it.gamerover.nbs.core.packet.NoBlackSkyAdapter;

@@ -1,7 +1,7 @@
 package it.gamerover.nbs.core.command;
 
 import it.gamerover.nbs.config.ConfigManager;
-import it.gamerover.nbs.core.NoBlackSky;
+import it.gamerover.nbs.NoBlackSky;
 import it.gamerover.nbs.core.logger.PluginLogger;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;

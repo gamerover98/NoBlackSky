@@ -3,7 +3,7 @@ package it.gamerover.nbs.core.logger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import it.gamerover.nbs.core.NoBlackSky;
+import it.gamerover.nbs.NoBlackSky;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
