@@ -8,6 +8,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class ReflectionContainer {
 
@@ -57,8 +58,17 @@ public final class ReflectionContainer {
     @Getter
     public final class Minecraft {
 
-        private final MCMinecraftServer  minecraftServer;
+        @NotNull
+        private final MCMinecraftServer minecraftServer;
+
+        @NotNull
         private final MCSharedConstants sharedConstants;
+
+        /**
+         * The net.minecraft.server.MinecraftVersion class is
+         * available from Spigot 1.17.
+         */
+        @Nullable
         private MCMinecraftVersion minecraftVersion;
 
         private Minecraft(String completeServerVersion) throws ReflectionException {
@@ -70,7 +80,7 @@ public final class ReflectionContainer {
 
             Object gameVersionInstance = sharedConstants.getGameVersionInstance();
 
-            // available from Spigot 1.17
+            // MinecraftVersion class is available from Spigot 1.17.
             if (gameVersionInstance != null) {
                 this.minecraftVersion = new MCMinecraftVersion(completeServerVersion, gameVersionInstance);
             }
