@@ -1,8 +1,9 @@
-package it.gamerover.nbs.core.util;
+package it.gamerover.nbs.reflection.util;
 
+import it.gamerover.nbs.reflection.ServerVersion;
 import org.jetbrains.annotations.NotNull;
 
-public final class GenericUtil {
+public class ReflectionUtil {
 
     /**
      * Nothing to say, it is a dot.
@@ -26,8 +27,33 @@ public final class GenericUtil {
     @SuppressWarnings("squid:S5998") // this repetition can lead to a stack overflow for large inputs.
     private static final String SERVER_VERSION_REGEX = "^([0-9])([.][0-9]+)+";
 
-    private GenericUtil() {
+    private ReflectionUtil() {
         throw new IllegalStateException("This is a static class");
+    }
+
+    /**
+     * Check if a server version is major than another.
+     *
+     * @param v1 The server version to compare to v2.
+     * @param v2 The challenger server version.
+     * @return MAJOR if v1 > v2, SAME if v1 = v2 and MINOR if v1 < v2.
+     */
+    @SuppressWarnings("squid:S135")
+    public static Comparison compareServerVersions(@NotNull ServerVersion v1, @NotNull ServerVersion v2) {
+
+        int dataVersionV1 = v1.getDataVersion();
+        int dataVersionV2 = v2.getDataVersion();
+
+        if (dataVersionV1 > dataVersionV2) {
+            return Comparison.MAJOR;
+        }
+
+        if (dataVersionV1 < dataVersionV2) {
+            return Comparison.MINOR;
+        }
+
+        return Comparison.SAME;
+
     }
 
     /**
@@ -68,7 +94,7 @@ public final class GenericUtil {
             int n2 = 0;
 
             if (i < s2.length) {
-                 n2 = s2[i];
+                n2 = s2[i];
             }
 
             if (n1 > n2) {
@@ -94,7 +120,7 @@ public final class GenericUtil {
      * @param serverVersion The not null string of server version.
      * @return An array of each server version number. (ex: 1.16 -> [1, 16])
      */
-    private static int[] splitMinecraftServerVersion(@NotNull String serverVersion) {
+    public static int[] splitMinecraftServerVersion(@NotNull String serverVersion) {
 
         if (serverVersion.isEmpty()) {
             throw new IllegalArgumentException("The server version argument cannot be empty");
@@ -108,26 +134,6 @@ public final class GenericUtil {
         }
 
         return result;
-
-    }
-
-    public enum Comparison {
-
-        MINOR, SAME, MAJOR;
-
-        /**
-         * @param comparison A not null instance of the enumeration.
-         * @return If MINOR -> MAJOR, if MAJOR -> MINOR, SAME -> SAME.
-         */
-        public static Comparison getInverted(@NotNull Comparison comparison) {
-
-            switch (comparison) {
-                case MINOR: return MAJOR;
-                case MAJOR: return MINOR;
-                default: return SAME;
-            }
-
-        }
 
     }
 
