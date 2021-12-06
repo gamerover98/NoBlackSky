@@ -1,7 +1,6 @@
 package it.gamerover.nbs.core.packet;
 
-import com.comphenix.packetwrapper.WrapperPlayServerLogin;
-import com.comphenix.packetwrapper.WrapperPlayServerRespawn;
+import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
 import it.gamerover.nbs.config.ConfigManager;
 import it.gamerover.nbs.reflection.ServerVersion;
@@ -40,7 +39,7 @@ public abstract class NoBlackSkyAdapter extends PacketAdapter {
 
 		super(new AdapterParameteters()
 				.plugin(plugin)
-				.types(WrapperPlayServerLogin.TYPE, WrapperPlayServerRespawn.TYPE)
+				.types(PacketType.Play.Server.LOGIN, PacketType.Play.Server.RESPAWN)
 				.listenerPriority(ListenerPriority.HIGHEST));
 
 		this.currentVersion = currentVersion;

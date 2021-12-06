@@ -45,7 +45,7 @@
                     <relocations>
                         <relocation>
                             <pattern>com.comphenix.packetwrapper</pattern>
-                            <shadedPattern>it.gamerover.nfps.libs.legacy.com.comphenix.packetwrapper</shadedPattern>
+                            <shadedPattern>it.gamerover.nbs.libs.legacy.com.comphenix.packetwrapper</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
