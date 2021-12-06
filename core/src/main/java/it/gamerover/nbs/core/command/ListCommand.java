@@ -35,7 +35,7 @@ public class ListCommand extends CombinedCommand {
             StringJoiner joiner = new StringJoiner("§a, §e");
             worlds.forEach(joiner::add);
 
-            sender.sendMessage("§aList of world from config: §e" + joiner);
+            sender.sendMessage("§aList of worlds from the config: §e" + joiner);
 
         }
 
