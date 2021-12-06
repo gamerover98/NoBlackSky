@@ -1,0 +1,24 @@
+#
+# This file will help us to keep track
+# of project requirements and commands.
+#
+
+---------------
+
+IntelliJ Idea required plugins:
+ - Lombok [https://plugins.jetbrains.com/plugin/6317-lombok]
+IntelliJ Idea suggest plugins:
+ - SonarLint [https://plugins.jetbrains.com/plugin/7973-sonarlint]
+
+---------------
+
+To compile the project, use this command at the root of the project:
+ mvn clean package -B
+
+The final jar file will be generated in:
+deploy/target/NoBlackSky-*.*.jar
+
+---------------
+
+Edit project version with this command at the root of the project:
+ mvn versions:set -DnewVersion="2.4"
