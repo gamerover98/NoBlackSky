@@ -3,12 +3,10 @@ package it.gamerover.nbs.core.packet;
 import com.comphenix.packetwrapper.WrapperPlayServerLogin;
 import com.comphenix.packetwrapper.WrapperPlayServerRespawn;
 import com.comphenix.protocol.events.ListenerPriority;
-import com.comphenix.protocol.reflect.StructureModifier;
 import it.gamerover.nbs.config.ConfigManager;
-import it.gamerover.nbs.NoBlackSky;
-import it.gamerover.nbs.core.util.GenericUtil;
+import it.gamerover.nbs.reflection.ServerVersion;
+import lombok.Getter;
 import org.bukkit.World;
-import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.plugin.Plugin;
@@ -24,7 +22,7 @@ import java.util.Set;
 /**
  * @author gamerover98
  */
-public class NoBlackSkyAdapter extends PacketAdapter {
+public abstract class NoBlackSkyAdapter extends PacketAdapter {
 
 	/**
 	 * ParadiseLand's package to auto-manage its worlds.
@@ -33,34 +31,38 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 	private static final String PARADISE_LAND_PACKAGE = "it.gamerover.paradise";
 
 	/**
-	 * Since 1.16 the packets of Join Game and Respawn were edited.
-	 * This string helps to edit correctly these packets.
+	 * Gets the not null current server version enum instance.
 	 */
-	private static final String V1_16 = "1.16";
+	@Getter @NotNull
+	protected final ServerVersion currentVersion;
 
-	/**
-	 * This world type will fix the black sky under height 61.
-	 * Wiki at: https://wiki.vg/Protocol#Join_Game
-	 */
-	private static final WorldType FLAT_WORLD_TYPE = WorldType.FLAT;
+	protected NoBlackSkyAdapter(@NotNull Plugin plugin, @NotNull ServerVersion currentVersion) {
 
-	/**
-	 * isFlat field on the 1.16+ packet is at index 4.
-	 * Wiki at: https://wiki.vg/Protocol#Respawn
-	 */
-	private static final int LOGIN_IS_FLAT_BOOLEAN_FIELD_INDEX = 4;
-
-	/**
-	 * isFlat field on the 1.16+ packet is at index 4.
-	 */
-	private static final int RESPAWN_IS_FLAT_BOOLEAN_FIELD_INDEX = 1;
-
-	public NoBlackSkyAdapter(Plugin plugin) {
 		super(new AdapterParameteters()
 				.plugin(plugin)
 				.types(WrapperPlayServerLogin.TYPE, WrapperPlayServerRespawn.TYPE)
 				.listenerPriority(ListenerPriority.HIGHEST));
+
+		this.currentVersion = currentVersion;
+
 	}
+
+	/**
+	 * Check if the World's environment is overworld.
+	 *
+	 * @param world The not-null player world instance.
+	 * @return True if the world is an overworld.
+	 */
+	protected abstract boolean isOverworld(@NotNull World world);
+
+	/**
+	 * Edit the current packet with the no black sky fix.
+	 *
+	 * @param packet     The not-null instance of the packet container.
+	 * @param packetType The not-null instance of the packet type.
+	 */
+	protected abstract void editPacket(@NotNull PacketContainer packet,
+									   @NotNull PacketType packetType);
 
 	/**
 	 * Edit the world type of world when the
@@ -77,36 +79,21 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 		}
 
 		World world = player.getWorld();
-		World.Environment environment = world.getEnvironment();
 
-		if (environment != World.Environment.NORMAL) {
+		if (!isOverworld(world)) {
 			return;
 		}
 
-		String serverVersion = NoBlackSky.getReflectionContainer()
-				.getMinecraft().getMinecraftServer().getVersion();
-
-		// TO-DO: temporary solution.
-		if (serverVersion == null) {
-			return;
-		}
-
+		String worldName = world.getName();
 		boolean alwaysEnabled = ConfigManager.isAlwaysEnabled();
 		boolean isParadiseWorld = isParadiseLandWorld(world);
 
-		PacketContainer packet = event.getPacket();
 		Set<String> worlds = ConfigManager.getWorlds();
 
-		if (alwaysEnabled || isParadiseWorld || worlds.contains(world.getName())) {
+		if (alwaysEnabled || isParadiseWorld || worlds.contains(worldName)) {
 
-			GenericUtil.Comparison comparison = GenericUtil
-					.compareServerVersions(serverVersion, V1_16);
-
-			if (comparison == GenericUtil.Comparison.MINOR) {
-				beforeNetherUpdate(packetType, packet);
-			} else {
-				afterNetherUpdate(packetType, packet);
-			}
+			PacketContainer packet = event.getPacket();
+			editPacket(packet, packetType);
 
 		}
 
@@ -122,34 +109,6 @@ public class NoBlackSkyAdapter extends PacketAdapter {
 
 		String className = chunkGenerator.getClass().getName();
 		return className.startsWith(PARADISE_LAND_PACKAGE);
-
-	}
-
-	private void afterNetherUpdate(@NotNull PacketType packetType, @NotNull PacketContainer packet) {
-
-		StructureModifier<Boolean> booleans = packet.getBooleans();
-
-		if (packetType == PacketType.Play.Server.LOGIN) {
-			booleans.write(LOGIN_IS_FLAT_BOOLEAN_FIELD_INDEX, true);
-		} else if (packetType == PacketType.Play.Server.RESPAWN) {
-			booleans.write(RESPAWN_IS_FLAT_BOOLEAN_FIELD_INDEX, true);
-		}
-
-	}
-
-	private void beforeNetherUpdate(@NotNull PacketType packetType, @NotNull PacketContainer packet) {
-
-		if (packetType == WrapperPlayServerLogin.TYPE) {
-
-			WrapperPlayServerLogin wrapperPlayServerLogin = new WrapperPlayServerLogin(packet);
-			wrapperPlayServerLogin.setLevelType(FLAT_WORLD_TYPE);
-
-		} else if (packetType == WrapperPlayServerRespawn.TYPE) {
-
-			WrapperPlayServerRespawn wrapperPlayServerRespawn = new WrapperPlayServerRespawn(packet);
-			wrapperPlayServerRespawn.setLevelType(FLAT_WORLD_TYPE);
-
-		}
 
 	}
 

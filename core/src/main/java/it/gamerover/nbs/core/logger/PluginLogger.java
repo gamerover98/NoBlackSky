@@ -3,8 +3,9 @@ package it.gamerover.nbs.core.logger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import it.gamerover.nbs.NoBlackSky;
+import it.gamerover.nbs.CoreHandler;
 import lombok.Getter;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,10 +19,19 @@ public final class PluginLogger {
 	private static final String ANSI_PACKAGE_NAME = "org.fusesource.jansi.Ansi";
 
 	@Getter
-	private static final Logger logger = NoBlackSky.getInstance().getLogger();
+	private static final Logger LOGGER;
 
 	@Getter
 	private static boolean ansiSupported = false;
+
+	static {
+
+		CoreHandler coreHandler = CoreHandler.getInstance();
+		Plugin plugin = coreHandler.getPlugin();
+
+		LOGGER = plugin.getLogger();
+
+	}
 
 	private PluginLogger() {
 		throw new IllegalStateException("This is a static class");
@@ -51,7 +61,7 @@ public final class PluginLogger {
 		if (isAnsiSupported()) {
 			ANSIPluginLogger.error(error, throwable);
 		} else {
-			logger.log(Level.SEVERE, error, throwable);
+			LOGGER.log(Level.SEVERE, error, throwable);
 		}
 
 	}
@@ -64,7 +74,7 @@ public final class PluginLogger {
 		if (isAnsiSupported()) {
 			ANSIPluginLogger.warning(warning);
 		} else {	
-			logger.log(Level.WARNING, warning);
+			LOGGER.log(Level.WARNING, warning);
 		}
 
 	}
@@ -77,7 +87,7 @@ public final class PluginLogger {
 		if (isAnsiSupported()) {
 			ANSIPluginLogger.info(info);
 		} else {
-			logger.log(Level.INFO, info);
+			LOGGER.log(Level.INFO, info);
 		}
 
 	}

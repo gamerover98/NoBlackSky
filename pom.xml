@@ -11,8 +11,9 @@
 
 	<modules>
         <module>reflection</module>
-        <module>config</module>
         <module>core</module>
+        <module>support</module>
+        <module>config</module>
 		<module>deploy</module>
 	</modules>
 

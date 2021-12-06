@@ -23,6 +23,7 @@ public final class GenericUtil {
      * -1.16    NO
      *
      */
+    @SuppressWarnings("squid:S5998") // this repetition can lead to a stack overflow for large inputs.
     private static final String SERVER_VERSION_REGEX = "^([0-9])([.][0-9]+)+";
 
     private GenericUtil() {

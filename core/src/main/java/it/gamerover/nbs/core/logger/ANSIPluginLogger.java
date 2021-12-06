@@ -31,7 +31,7 @@ final class ANSIPluginLogger {
 	public static void error(@NotNull String error, @Nullable Throwable throwable) {
 
 		String message = getAnsiColor(Ansi.Color.RED) + error + getAnsiColor(Ansi.Color.WHITE);
-		PluginLogger.getLogger().log(Level.SEVERE, message, throwable);
+		PluginLogger.getLOGGER().log(Level.SEVERE, message, throwable);
 
 	}
 
@@ -41,7 +41,7 @@ final class ANSIPluginLogger {
 	public static void warning(@NotNull String warning) {
 
 		String message = getAnsiColor(Ansi.Color.YELLOW) + warning + getAnsiColor(Ansi.Color.WHITE);
-		PluginLogger.getLogger().log(Level.WARNING, message);
+		PluginLogger.getLOGGER().log(Level.WARNING, message);
 
 	}
 
@@ -51,7 +51,7 @@ final class ANSIPluginLogger {
 	public static void info(@NotNull String info) {
 
 		String message = getAnsiColor(Ansi.Color.GREEN) + info + getAnsiColor(Ansi.Color.WHITE);
-		PluginLogger.getLogger().log(Level.INFO, message);
+		PluginLogger.getLOGGER().log(Level.INFO, message);
 
 	}
 

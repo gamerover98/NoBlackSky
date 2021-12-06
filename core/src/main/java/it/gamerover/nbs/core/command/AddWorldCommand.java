@@ -1,11 +1,12 @@
 package it.gamerover.nbs.core.command;
 
 import it.gamerover.nbs.config.ConfigManager;
-import it.gamerover.nbs.NoBlackSky;
+import it.gamerover.nbs.CoreHandler;
 import it.gamerover.nbs.core.logger.PluginLogger;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import xyz.tozymc.spigot.api.command.CombinedCommand;
 import xyz.tozymc.spigot.api.command.Command;
@@ -67,7 +68,10 @@ public class AddWorldCommand extends CombinedCommand {
             return TabResult.EMPTY_RESULT;
         }
 
-        List<World> worlds = NoBlackSky.getInstance().getServer().getWorlds();
+        CoreHandler coreHandler = CoreHandler.getInstance();
+        Plugin plugin = coreHandler.getPlugin();
+
+        List<World> worlds = plugin.getServer().getWorlds();
         Set<String> names = new HashSet<>();
 
         worlds.forEach(world -> names.add(world.getName()));

@@ -1,7 +1,7 @@
 package it.gamerover.nbs.core.command;
 
 import it.gamerover.nbs.config.ConfigManager;
-import it.gamerover.nbs.NoBlackSky;
+import it.gamerover.nbs.CoreHandler;
 import org.bukkit.command.CommandSender;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
@@ -25,8 +25,8 @@ public class ReloadCommand extends CombinedCommand {
     @Override
     public CommandResult onCommand(@NotNull CommandSender sender, @NotNull String[] params) {
 
-        //TODO: temporary solution.
-        Plugin plugin = NoBlackSky.getInstance();
+        CoreHandler coreHandler = CoreHandler.getInstance();
+        Plugin plugin = coreHandler.getPlugin();
 
         ConfigManager.reload(plugin);
         sender.sendMessage("§aSuccessful reload");
