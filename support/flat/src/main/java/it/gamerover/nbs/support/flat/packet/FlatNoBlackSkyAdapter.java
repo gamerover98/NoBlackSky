@@ -11,8 +11,13 @@ import it.gamerover.nbs.reflection.util.Comparison;
 import it.gamerover.nbs.reflection.util.ReflectionUtil;
 import org.bukkit.World;
 import org.bukkit.WorldType;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Optional;
 
 @SuppressWarnings("squid:S100") // Rename methods name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.
 public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
@@ -34,26 +39,73 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
      */
     private static final WorldType FLAT_WORLD_TYPE = WorldType.FLAT;
 
+    /**
+     * Up to 1.15.x, the join and respawn packet has a dimension
+     * parameter with three possible values:
+     *  -1: nether
+     *   0: overworld (normal world)
+     *   1: end
+     */
+    private static final int OVERWORLD_DIMENSION = 0;
+
     public FlatNoBlackSkyAdapter(@NotNull Plugin plugin, @NotNull ServerVersion currentVersion) {
         super(plugin, currentVersion);
     }
 
     @Override
-    protected boolean isOverworld(@NotNull World world) {
+    protected boolean isOverworld(@NotNull PacketContainer packet) {
 
-        World.Environment environment = world.getEnvironment();
-        return environment == World.Environment.NORMAL;
+        // running server version >= 1.16
+        if (isAtLeastNetherUpdate()) {
+            return checkWorldAtLeastNetherUpdate(packet);
+        } else {
+            return checkWorldBeforeNetherUpdate(packet);
+        }
+
+    }
+
+    @Nullable
+    @Override
+    protected World getWorld(@Nullable Player player, @NotNull PacketContainer packet) {
+
+        if (isAtLeastNetherUpdate()) {
+
+            StructureModifier<World> worldsStructureModifier = packet.getWorldKeys();
+            List<World> worlds = worldsStructureModifier.getValues();
+            Optional<World> optionalWorld = worlds.stream().findAny();
+
+            if (optionalWorld.isPresent()) {
+                return optionalWorld.get();
+            }
+
+        }
+
+        if (player == null) {
+            return null;
+        }
+
+        /*
+         * Trying to fix the exception "The method getWorld is not supported for temporary players":
+         * https://github.com/gamerover98/NoBlackSky/issues/4
+         */
+        try {
+
+            return player.getWorld();
+
+        } catch (Exception ex) {
+            return null; // if it fails, the black sky fix doesn't work for the current logging player.
+        }
 
     }
 
     @Override
-    protected void editPacket(@NotNull PacketContainer packet, @NotNull PacketType packetType) {
+    protected void editPacket(@NotNull PacketContainer packet) {
 
         // running server version >= 1.16
         if (isAtLeastNetherUpdate()) {
-            editPacketAtLeastNetherUpdate(packet, packetType);
+            editPacketAtLeastNetherUpdate(packet);
         } else {
-            editPacketBeforeNetherUpdate(packet, packetType);
+            editPacketBeforeNetherUpdate(packet);
         }
 
     }
@@ -68,19 +120,58 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
 
     }
 
+    private boolean checkWorldAtLeastNetherUpdate(@NotNull PacketContainer packet) {
+
+        World world = getWorld(null, packet);
+        return world != null && world.getEnvironment() == World.Environment.NORMAL;
+
+    }
+
+    private boolean checkWorldBeforeNetherUpdate(@NotNull PacketContainer packet) {
+
+        int worldDimension = -1;
+
+        /*
+         * [Warning]
+         *   The following commented piece of code is bugged!
+         *
+         *   1) The method getDimension() from WrapperPlayServerLogin class is incorrect because
+         *      it gets the entity ID instead of the dimension number.
+         *      Indicted line (1): worldDimension = wrapperPlayServerLogin.getDimension()
+         *
+         *      For this reason, according to the protocol 1.15.2 APIs (that you can find
+         *      at: https://wiki.vg/index.php?title=Protocol&oldid=16067#Join_Game), the
+         *      correct integer field index is 1 and not 0.
+         *
+         *   2) The method getDimension() from WrapperPlayServerRespawn class throws an error.
+         *      Indicted line: worldDimension = wrapperPlayServerRespawn.getDimension()
+         *
+         * The following solution is for both packets.
+         */
+        @SuppressWarnings("deprecation") // the getDimensions() method will be removed from ProtocolLib.
+        List<Integer> dimensionList = packet.getDimensions().getValues();
+        Optional<Integer> optional = dimensionList.stream().findAny();
+
+        if (optional.isPresent()) {
+            worldDimension = optional.get();
+        }
+
+        return worldDimension == OVERWORLD_DIMENSION;
+
+    }
+
     /**
      * Edit the login or respawn packet if the server version is at least 1.16
-     *
-     * @param packet     The not-null instance of the packet container.
-     * @param packetType The not-null instance of the packet type.
+     * @param packet The not-null instance of the packet container.
      */
-    private void editPacketAtLeastNetherUpdate(@NotNull PacketContainer packet, @NotNull PacketType packetType) {
+    private void editPacketAtLeastNetherUpdate(@NotNull PacketContainer packet) {
 
+        PacketType packetType = packet.getType();
         StructureModifier<Boolean> booleans = packet.getBooleans();
 
-        if (packetType == PacketType.Play.Server.LOGIN) {
+        if (isJoinGamePacketType(packetType)) {
             booleans.write(LOGIN_IS_FLAT_BOOLEAN_FIELD_INDEX, true);
-        } else if (packetType == PacketType.Play.Server.RESPAWN) {
+        } else if (isRespawnPacketType(packetType)) {
             booleans.write(RESPAWN_IS_FLAT_BOOLEAN_FIELD_INDEX, true);
         }
 
@@ -88,11 +179,11 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
 
     /**
      * Edit the login or respawn packet if the server version is before 1.16.
-     *
-     * @param packet     The not-null instance of the packet container.
-     * @param packetType The not-null instance of the packet type.
+     * @param packet The not-null instance of the packet container.
      */
-    private void editPacketBeforeNetherUpdate(@NotNull PacketContainer packet, @NotNull PacketType packetType) {
+    private void editPacketBeforeNetherUpdate(@NotNull PacketContainer packet) {
+
+        PacketType packetType = packet.getType();
 
         if (packetType == WrapperPlayServerLogin.TYPE) {
 
@@ -106,6 +197,22 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
 
         }
 
+    }
+
+    /**
+     * @param packetType The not-null instance of the packet type.
+     * @return True if the packet is a LOGIN (Join Game) packet.
+     */
+    private static boolean isJoinGamePacketType(@NotNull PacketType packetType) {
+        return packetType == PacketType.Play.Server.LOGIN;
+    }
+
+    /**
+     * @param packetType The not-null instance of the packet type.
+     * @return True if the packet is a RESPAWN packet.
+     */
+    private static boolean isRespawnPacketType(@NotNull PacketType packetType) {
+        return packetType == PacketType.Play.Server.RESPAWN;
     }
 
 }
