@@ -58,6 +58,19 @@ public class ConfigManager {
     }
 
     /**
+     * @return True if the debug-mode is enabled.
+     * @throws IllegalStateException If the configuration is not loaded.
+     */
+    public static boolean isDebugMode() {
+
+        checkSettings();
+
+        assert settingsManager != null;
+        return settingsManager.getProperty(ConfigHolder.DEBUG_MODE);
+
+    }
+
+    /**
      * @return True if all normal worlds must be fixed by default
      * @throws IllegalStateException If the configuration is not loaded.
      */
