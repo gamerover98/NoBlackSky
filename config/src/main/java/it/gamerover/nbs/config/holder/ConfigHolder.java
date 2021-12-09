@@ -11,15 +11,16 @@ import ch.jalu.configme.properties.StringSetProperty;
  */
 public class ConfigHolder implements SettingsHolder {
 
-    private static final String DEBUG_MODE_PROPERTY_NAME     = "debug-mode";
-    private static final String ALWAYS_ENABLED_PROPERTY_NAME = "always-enabled";
-    private static final String WORLDS_PROPERTY_NAME         = "worlds";
+    public static final String DEBUG_MODE_PROPERTY_NAME     = "debug-mode";
+    public static final String ALWAYS_ENABLED_PROPERTY_NAME = "always-enabled";
+    public static final String WORLDS_PROPERTY_NAME         = "worlds";
 
     private static final String DEFAULT_EXAMPLE_WORLD = "exampleWorld";
 
     @Comment({
-            "By enabling this property, debug strings will be logged",
-            "By default, this value is false."
+            "By enabling this property, a debug.log file will be created into the plugins/NoBlackSky folder.",
+            "Debug logs will be printed on the server console and appended on this debug file.",
+            "This file is required when a bug or an issue is reported. By default, this value is false."
     })
     public static final BooleanProperty DEBUG_MODE =
             new BooleanProperty(DEBUG_MODE_PROPERTY_NAME, false);
