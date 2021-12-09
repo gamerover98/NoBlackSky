@@ -2,9 +2,11 @@ package it.gamerover.nbs.core.packet;
 
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.ListenerPriority;
+import com.dumptruckman.minecraft.util.Logging;
 import it.gamerover.nbs.config.ConfigManager;
 import it.gamerover.nbs.reflection.ServerVersion;
 import lombok.Getter;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.ChunkGenerator;
@@ -88,6 +90,13 @@ public abstract class NoBlackSkyAdapter extends PacketAdapter {
 
 		PacketContainer packet = event.getPacket();
 
+		if (isDebugMode()) {
+
+			Logging.finest(ChatColor.AQUA + "Packet-player: %s", player.getName());
+			Logging.finest(ChatColor.AQUA + "Packet-type: %s",   packet.getType().name());
+
+		}
+
 		if (!isOverworld(packet)) {
 			return;
 		}
@@ -104,8 +113,20 @@ public abstract class NoBlackSkyAdapter extends PacketAdapter {
 
 			Set<String> worlds = ConfigManager.getWorlds();
 			boolean isParadiseWorld = isParadiseLandWorld(world);
+			boolean contained = worlds.contains(world.getName());
 
-			if (!isParadiseWorld && !worlds.contains(world.getName())) {
+			if (isDebugMode()) {
+
+				Logging.finest(ChatColor.AQUA + "Packet-world-paradise: %b",  isParadiseWorld);
+				Logging.finest(ChatColor.AQUA + "Packet-world-in-config-list: %b", contained);
+
+			}
+
+			/*
+			 * If the world is not a ParadiseLand world and is
+			 * not contained into the config list, then cancel the packet editing.
+			 */
+			if (!isParadiseWorld && !contained) {
 				return;
 			}
 
@@ -113,6 +134,13 @@ public abstract class NoBlackSkyAdapter extends PacketAdapter {
 
 		editPacket(packet);
 
+	}
+
+	/**
+	 * @return True if the debug-mode is enabled.
+	 */
+	protected boolean isDebugMode() {
+		return ConfigManager.isDebugMode();
 	}
 
 	private boolean isParadiseLandWorld(@NotNull World world) {

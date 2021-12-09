@@ -4,8 +4,10 @@ import com.comphenix.packetwrapper.WrapperPlayServerLogin;
 import com.comphenix.packetwrapper.WrapperPlayServerRespawn;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
+import com.dumptruckman.minecraft.util.Logging;
 import it.gamerover.nbs.core.packet.NoBlackSkyAdapter;
 import it.gamerover.nbs.reflection.ServerVersion;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
@@ -65,6 +67,10 @@ public class LegacyNoBlackSkyAdapter extends NoBlackSkyAdapter {
 
         }
 
+        if (isDebugMode()) {
+            Logging.finest(ChatColor.AQUA + "packet-world-dimension: %d", worldDimension);
+        }
+
         return worldDimension == OVERWORLD_DIMENSION;
 
     }
@@ -73,21 +79,37 @@ public class LegacyNoBlackSkyAdapter extends NoBlackSkyAdapter {
     @Override
     protected World getWorld(@Nullable Player player, @NotNull PacketContainer packet) {
 
-        if (player == null) {
-            return null;
+        World result = null;
+
+        if (player != null) {
+
+            /*
+             * Trying to fix the exception "The method getWorld is not supported for temporary players":
+             * https://github.com/gamerover98/NoBlackSky/issues/4
+             */
+            try {
+
+                result = player.getWorld();
+
+            } catch (Exception ex) {
+                // if it fails, the black sky fix doesn't work for the current logging player.
+            }
+
         }
 
-        /*
-         * Trying to fix the exception "The method getWorld is not supported for temporary players":
-         * https://github.com/gamerover98/NoBlackSky/issues/4
-         */
-        try {
+        if (isDebugMode()) {
 
-            return player.getWorld();
+            String worldName = null;
 
-        } catch (Exception ex) {
-            return null; // if it fails, the black sky fix doesn't work for the current logging player.
+            if (result != null) {
+                worldName = result.getName();
+            }
+
+            Logging.finest(ChatColor.AQUA + "Packet-world: %s", worldName);
+
         }
+
+        return result;
 
     }
 
@@ -101,10 +123,20 @@ public class LegacyNoBlackSkyAdapter extends NoBlackSkyAdapter {
             WrapperPlayServerLogin wrapperPlayServerLogin = new WrapperPlayServerLogin(packet);
             wrapperPlayServerLogin.setLevelType(FLAT_WORLD_TYPE);
 
+            if (isDebugMode()) {
+                Logging.finest(ChatColor.AQUA + "Packet-level-type: %s",
+                        wrapperPlayServerLogin.getLevelType().name());
+            }
+
         } else if (packetType == WrapperPlayServerRespawn.TYPE) {
 
             WrapperPlayServerRespawn wrapperPlayServerRespawn = new WrapperPlayServerRespawn(packet);
             wrapperPlayServerRespawn.setLevelType(FLAT_WORLD_TYPE);
+
+            if (isDebugMode()) {
+                Logging.finest(ChatColor.AQUA + "Packet-level-type: %s",
+                        wrapperPlayServerRespawn.getLevelType().name());
+            }
 
         }
 

@@ -5,10 +5,12 @@ import com.comphenix.packetwrapper.WrapperPlayServerRespawn;
 import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.StructureModifier;
+import com.dumptruckman.minecraft.util.Logging;
 import it.gamerover.nbs.core.packet.NoBlackSkyAdapter;
 import it.gamerover.nbs.reflection.ServerVersion;
 import it.gamerover.nbs.reflection.util.Comparison;
 import it.gamerover.nbs.reflection.util.ReflectionUtil;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.WorldType;
 import org.bukkit.entity.Player;
@@ -68,6 +70,8 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
     @Override
     protected World getWorld(@Nullable Player player, @NotNull PacketContainer packet) {
 
+        World result = null;
+
         if (isAtLeastNetherUpdate()) {
 
             StructureModifier<World> worldsStructureModifier = packet.getWorldKeys();
@@ -75,26 +79,40 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
             Optional<World> optionalWorld = worlds.stream().findAny();
 
             if (optionalWorld.isPresent()) {
-                return optionalWorld.get();
+                result = optionalWorld.get();
             }
 
         }
 
-        if (player == null) {
-            return null;
+        if (result == null && player != null) {
+
+            /*
+             * Trying to fix the exception "The method getWorld is not supported for temporary players":
+             * https://github.com/gamerover98/NoBlackSky/issues/4
+             */
+            try {
+
+                result = player.getWorld();
+
+            } catch (Exception ex) {
+                // if it fails, the black sky fix doesn't work for the current logging player.
+            }
+
         }
 
-        /*
-         * Trying to fix the exception "The method getWorld is not supported for temporary players":
-         * https://github.com/gamerover98/NoBlackSky/issues/4
-         */
-        try {
+        if (isDebugMode()) {
 
-            return player.getWorld();
+            String worldName = null;
 
-        } catch (Exception ex) {
-            return null; // if it fails, the black sky fix doesn't work for the current logging player.
+            if (result != null) {
+                worldName = result.getName();
+            }
+
+            Logging.finest(ChatColor.AQUA + "Packet-world: %s", worldName);
+
         }
+
+        return result;
 
     }
 
@@ -123,7 +141,25 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
     private boolean checkWorldAtLeastNetherUpdate(@NotNull PacketContainer packet) {
 
         World world = getWorld(null, packet);
-        return world != null && world.getEnvironment() == World.Environment.NORMAL;
+        World.Environment environment = null;
+
+        if (world != null) {
+            environment = world.getEnvironment();
+        }
+
+        if (isDebugMode()) {
+
+            String envName = null;
+
+            if (environment != null) {
+                envName = environment.name();
+            }
+
+            Logging.finest(ChatColor.AQUA + "Packet-world-env: %s", envName);
+
+        }
+
+        return environment == World.Environment.NORMAL;
 
     }
 
@@ -151,9 +187,18 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
         @SuppressWarnings("deprecation") // the getDimensions() method will be removed from ProtocolLib.
         List<Integer> dimensionList = packet.getDimensions().getValues();
         Optional<Integer> optional = dimensionList.stream().findAny();
+        boolean isPresent = optional.isPresent();
 
-        if (optional.isPresent()) {
+        if (isDebugMode()) {
+            Logging.finest(ChatColor.AQUA + "packet-world-present: %s", String.valueOf(isPresent));
+        }
+
+        if (isPresent) {
             worldDimension = optional.get();
+        }
+
+        if (isDebugMode()) {
+            Logging.finest(ChatColor.AQUA + "packet-world-dimension: %d", worldDimension);
         }
 
         return worldDimension == OVERWORLD_DIMENSION;
@@ -161,7 +206,7 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
     }
 
     /**
-     * Edit the login or respawn packet if the server version is at least 1.16
+     * Edit the login or respawn packet if the server version is at least 1.16.
      * @param packet The not-null instance of the packet container.
      */
     private void editPacketAtLeastNetherUpdate(@NotNull PacketContainer packet) {
@@ -170,9 +215,31 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
         StructureModifier<Boolean> booleans = packet.getBooleans();
 
         if (isJoinGamePacketType(packetType)) {
+
             booleans.write(LOGIN_IS_FLAT_BOOLEAN_FIELD_INDEX, true);
+
+            if (isDebugMode()) {
+
+                Logging.finest(ChatColor.AQUA + "Packet-field-index: %d",
+                        LOGIN_IS_FLAT_BOOLEAN_FIELD_INDEX);
+                Logging.finest(ChatColor.AQUA + "Packet-field-value: %b",
+                        booleans.read(LOGIN_IS_FLAT_BOOLEAN_FIELD_INDEX));
+
+            }
+
         } else if (isRespawnPacketType(packetType)) {
+
             booleans.write(RESPAWN_IS_FLAT_BOOLEAN_FIELD_INDEX, true);
+
+            if (isDebugMode()) {
+
+                Logging.finest(ChatColor.AQUA + "Packet-field-index: %d",
+                        RESPAWN_IS_FLAT_BOOLEAN_FIELD_INDEX);
+                Logging.finest(ChatColor.AQUA + "Packet-field-value: %b",
+                        booleans.read(RESPAWN_IS_FLAT_BOOLEAN_FIELD_INDEX));
+
+            }
+
         }
 
     }
@@ -190,10 +257,20 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
             WrapperPlayServerLogin wrapperPlayServerLogin = new WrapperPlayServerLogin(packet);
             wrapperPlayServerLogin.setLevelType(FLAT_WORLD_TYPE);
 
+            if (isDebugMode()) {
+                Logging.finest(ChatColor.AQUA + "Packet-level-type: %s",
+                        wrapperPlayServerLogin.getLevelType().name());
+            }
+
         } else if (packetType == WrapperPlayServerRespawn.TYPE) {
 
             WrapperPlayServerRespawn wrapperPlayServerRespawn = new WrapperPlayServerRespawn(packet);
             wrapperPlayServerRespawn.setLevelType(FLAT_WORLD_TYPE);
+
+            if (isDebugMode()) {
+                Logging.finest(ChatColor.AQUA + "Packet-level-type: %s",
+                        wrapperPlayServerRespawn.getLevelType().name());
+            }
 
         }
 

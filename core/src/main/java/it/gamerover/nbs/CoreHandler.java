@@ -1,7 +1,9 @@
 package it.gamerover.nbs;
 
 import com.dumptruckman.minecraft.util.Logging;
+import com.google.common.base.Joiner;
 import it.gamerover.nbs.config.ConfigManager;
+import it.gamerover.nbs.config.holder.ConfigHolder;
 import it.gamerover.nbs.core.packet.NoBlackSkyAdapter;
 import it.gamerover.nbs.reflection.ReflectionContainer;
 import it.gamerover.nbs.reflection.ReflectionException;
@@ -89,6 +91,19 @@ public abstract class CoreHandler {
 
 		this.protocolManager = ProtocolLibrary.getProtocolManager();
 		ConfigManager.reload(plugin);
+
+		if (ConfigManager.isDebugMode()) {
+
+			Logging.setDebugLevel(3); // 3 for finest logs.
+			Logging.fine(ChatColor.YELLOW + "Debug-mode is enabled!");
+			Logging.fine(ChatColor.YELLOW + "Current running supported server version: %s",
+					CoreHandler.getServerVersion().getVersion());
+			Logging.fine(ChatColor.YELLOW + "Config: %s property: %s", ConfigHolder.ALWAYS_ENABLED_PROPERTY_NAME,
+					String.valueOf(ConfigManager.isAlwaysEnabled()));
+			Logging.fine(ChatColor.YELLOW + "Config: %s property: {%s}", ConfigHolder.WORLDS_PROPERTY_NAME,
+					Joiner.on(", ").join(ConfigManager.getWorlds()));
+
+		}
 
 	}
 
