@@ -1,7 +1,8 @@
 package it.gamerover.nbs.core.command;
 
+import com.dumptruckman.minecraft.util.Logging;
 import it.gamerover.nbs.config.ConfigManager;
-import it.gamerover.nbs.core.logger.PluginLogger;
+import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -36,7 +37,7 @@ public class RemoveWorldCommand extends CombinedCommand {
 
         if (result) {
 
-            PluginLogger.info("Removed " + worldName + " from the config list");
+            Logging.info(ChatColor.YELLOW + "Removed %s from the config list", worldName);
 
             if (sender instanceof Player) {
 

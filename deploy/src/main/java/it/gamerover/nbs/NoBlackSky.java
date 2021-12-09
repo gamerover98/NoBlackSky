@@ -1,5 +1,6 @@
 package it.gamerover.nbs;
 
+import com.dumptruckman.minecraft.util.Logging;
 import it.gamerover.nbs.reflection.ReflectionException;
 import it.gamerover.nbs.reflection.ServerVersion;
 import it.gamerover.nbs.support.flat.FlatHandler;
@@ -44,16 +45,17 @@ public class NoBlackSky extends JavaPlugin {
     @SuppressWarnings("squid:S2696") // Make the enclosing method "static" or remove this set.
     public void onLoad() {
 
+        Logging.init(this);
         NoBlackSky.instance = this;
 
         try {
 
-            CoreHandler.init(this);
+            CoreHandler.init();
 
         } catch (ReflectionException firstEx) {
 
             String message = "Please report this error on the issues page on GitHub or Spigot forum";
-            getLogger().log(Level.SEVERE, message, firstEx);
+            Logging.log(Level.SEVERE, message, firstEx);
 
             isPluginStartable = false;
 
@@ -65,7 +67,7 @@ public class NoBlackSky extends JavaPlugin {
         if (!protocolLibInstalled) {
 
             isPluginStartable = false;
-            getLogger().severe("Cannot start " + getName() + " because "
+            Logging.severe("Cannot start " + getName() + " because "
                     + PROTOCOL_LIB_PLUGIN_NAME + " isn't installed!");
 
         }
@@ -89,7 +91,7 @@ public class NoBlackSky extends JavaPlugin {
         } catch (Exception generalEx) {
 
             isPluginStartable = false;
-            getLogger().log(Level.SEVERE, "Cannot initialize the handler", generalEx);
+            Logging.log(Level.SEVERE, "Cannot initialize the handler", generalEx);
 
         }
 
@@ -126,7 +128,7 @@ public class NoBlackSky extends JavaPlugin {
      */
     private void disablePlugin() {
 
-        getLogger().warning("Disabling " + getName() + " - " + super.getDescription().getVersion());
+        Logging.warning("Disabling " + getName() + " - " + super.getDescription().getVersion());
         super.setEnabled(false);
 
     }

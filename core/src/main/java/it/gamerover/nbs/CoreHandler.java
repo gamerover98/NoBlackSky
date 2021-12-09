@@ -1,10 +1,12 @@
 package it.gamerover.nbs;
 
+import com.dumptruckman.minecraft.util.Logging;
 import it.gamerover.nbs.config.ConfigManager;
 import it.gamerover.nbs.core.packet.NoBlackSkyAdapter;
 import it.gamerover.nbs.reflection.ReflectionContainer;
 import it.gamerover.nbs.reflection.ReflectionException;
 import it.gamerover.nbs.reflection.ServerVersion;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -12,13 +14,9 @@ import com.comphenix.protocol.ProtocolLibrary;
 import com.comphenix.protocol.ProtocolManager;
 
 import it.gamerover.nbs.core.command.PluginCommand;
-import it.gamerover.nbs.core.logger.PluginLogger;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import xyz.tozymc.spigot.api.command.CommandController;
-
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 @SuppressWarnings("squid:S2696")
 public abstract class CoreHandler {
@@ -90,8 +88,6 @@ public abstract class CoreHandler {
 	protected void pluginLoading() {
 
 		this.protocolManager = ProtocolLibrary.getProtocolManager();
-
-		PluginLogger.init();
 		ConfigManager.reload(plugin);
 
 	}
@@ -105,14 +101,12 @@ public abstract class CoreHandler {
 			return;
 		}
 
-		Logger logger = plugin.getLogger();
-
 		protocolManager.addPacketListener(getNoBlackSkyAdapter());
 
 		commandController = new CommandController((JavaPlugin) plugin);
 		pluginCommand     = new PluginCommand(commandController);
 
-		logger.info(plugin.getName() + " successful enabled!");
+		Logging.finest("%s successful enabled!", plugin.getName());
 
 	}
 
@@ -124,8 +118,6 @@ public abstract class CoreHandler {
 		if (protocolManager == null) {
 			return;
 		}
-
-		Logger logger = plugin.getLogger();
 
 		protocolManager.removePacketListeners(plugin);
 
@@ -141,24 +133,22 @@ public abstract class CoreHandler {
 
 		}
 
-		logger.info(plugin.getName() + " successful disabled!");
+		Logging.finest(ChatColor.GREEN + "%s successful disabled!", plugin.getName());
+		Logging.shutdown();
 
 	}
 
 	/**
 	 * Initialize the CoreHandler by loading static stuff like reflections and server version.
-	 *
-	 * @param plugin The not-null plugin instance.
 	 * @throws ReflectionException Thrown due to a reflection's error.
 	 */
-	static void init(@NotNull Plugin plugin) throws ReflectionException {
+	static void init() throws ReflectionException {
 
 		if (reflectionContainer == null) {
 			reflectionContainer = new ReflectionContainer();
 		}
 
 		ServerVersion runningVersion = ServerVersion.getRunningServerVersion(reflectionContainer);
-		Logger logger = plugin.getLogger();
 
 		// The server running with an unknown server version.
 		if (runningVersion == null) {
@@ -168,13 +158,13 @@ public abstract class CoreHandler {
 					+ "attempting to start the plugin with the latest ("
 					+ latestVersion.getVersion() + ") supported version ...";
 
-			logger.log(Level.WARNING, message);
+			Logging.warning(ChatColor.YELLOW + message);
 			runningVersion = latestVersion;
 
 		} else {
 
 			String message = "Detected " + runningVersion.getVersion() + " server version";
-			logger.log(Level.INFO, message);
+			Logging.info(ChatColor.GREEN + message);
 
 		}
 

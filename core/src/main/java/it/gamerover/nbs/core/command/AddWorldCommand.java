@@ -1,8 +1,9 @@
 package it.gamerover.nbs.core.command;
 
+import com.dumptruckman.minecraft.util.Logging;
 import it.gamerover.nbs.config.ConfigManager;
 import it.gamerover.nbs.CoreHandler;
-import it.gamerover.nbs.core.logger.PluginLogger;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -41,7 +42,7 @@ public class AddWorldCommand extends CombinedCommand {
 
         if (result) {
 
-            PluginLogger.info("Added " + worldName + " into the config list");
+            Logging.info(ChatColor.GREEN + "Added %s into the config list", worldName);
 
             if (sender instanceof Player) {
 
