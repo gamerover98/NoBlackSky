@@ -3,6 +3,9 @@ package it.gamerover.nbs.config;
 import ch.jalu.configme.SettingsManager;
 import ch.jalu.configme.SettingsManagerBuilder;
 import it.gamerover.nbs.config.holder.ConfigHolder;
+import it.gamerover.nbs.reflection.ServerVersion;
+import it.gamerover.nbs.reflection.util.Comparison;
+import it.gamerover.nbs.reflection.util.ReflectionUtil;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,7 +41,7 @@ public class ConfigManager {
      * Reload or load the configuration file.
      * @param plugin The not-null NoBlackSky plugin instance.
      */
-    public static void reload(@NotNull Plugin plugin) {
+    public static void reload(@NotNull Plugin plugin, @NotNull ServerVersion currentVersion) {
 
         if (settingsManager == null) {
 
@@ -54,6 +57,8 @@ public class ConfigManager {
         } else {
             settingsManager.reload();
         }
+
+        checkDataIntegrity(currentVersion);
 
     }
 
@@ -80,6 +85,19 @@ public class ConfigManager {
 
         assert settingsManager != null;
         return settingsManager.getProperty(ConfigHolder.ALWAYS_ENABLED);
+
+    }
+
+    /**
+     * @return True if all normal worlds must be fixed by default
+     * @throws IllegalStateException If the configuration is not loaded.
+     */
+    public static boolean includeCustomWorlds() {
+
+        checkSettings();
+
+        assert settingsManager != null;
+        return settingsManager.getProperty(ConfigHolder.INCLUDE_CUSTOM_WORLDS);
 
     }
 
@@ -160,6 +178,30 @@ public class ConfigManager {
     //
     // PRIVATE METHODS
     //
+
+    /**
+     * Checks data integrity of this configuration.
+     * @param currentVersion The not-null running server version.
+     */
+    private static void checkDataIntegrity(@NotNull ServerVersion currentVersion) {
+
+        checkSettings();
+        assert settingsManager != null;
+
+        Comparison result = ReflectionUtil.compareServerVersions(currentVersion, ServerVersion.V1_17);
+
+        // It is a version before 1.17
+        if (result == Comparison.MINOR) {
+
+            boolean includeCustomWorldsValue = includeCustomWorlds();
+
+            if (includeCustomWorldsValue) {
+                settingsManager.setProperty(ConfigHolder.INCLUDE_CUSTOM_WORLDS, false);
+            }
+
+        }
+
+    }
 
     /**
      * @throws IllegalStateException If the settings manager instance is null,

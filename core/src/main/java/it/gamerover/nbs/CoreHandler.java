@@ -90,7 +90,7 @@ public abstract class CoreHandler {
 	protected void pluginLoading() {
 
 		this.protocolManager = ProtocolLibrary.getProtocolManager();
-		ConfigManager.reload(plugin);
+		ConfigManager.reload(plugin, serverVersion);
 
 		if (ConfigManager.isDebugMode()) {
 

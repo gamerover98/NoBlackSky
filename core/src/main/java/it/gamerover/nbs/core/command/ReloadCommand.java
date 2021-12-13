@@ -28,7 +28,7 @@ public class ReloadCommand extends CombinedCommand {
         CoreHandler coreHandler = CoreHandler.getInstance();
         Plugin plugin = coreHandler.getPlugin();
 
-        ConfigManager.reload(plugin);
+        ConfigManager.reload(plugin, CoreHandler.getServerVersion());
         sender.sendMessage("§aSuccessful reload");
 
         return CommandResult.SUCCESS;
