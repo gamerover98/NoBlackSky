@@ -75,6 +75,23 @@ public class LegacyNoBlackSkyAdapter extends NoBlackSkyAdapter {
 
     }
 
+    /**
+     * From Spigot 1.8 to 1.15.2, the only way to check the world's environment is by using the player.
+     * From Spigot 1.16, the Joining and Respawn packet has been edited by implementing the "world name" property
+     * and other things.
+     *
+     * <p>
+     *     This method is afflicted by an irresolvable bug at least until Spigot 1.15.2.
+     *     In some cases, all things of the player couldn't be loaded in time so,
+     *     the world's instance may be null. This causes incorrect world checking
+     *     and cancellation of packet editing.
+     *     Luckily, from Spigot 1.16 this bug has been fixed (read the method
+     *     content of FlatNoBlackSkyAdapter.checkWorldBeforeNetherUpdate() method).
+     * </p>
+     *
+     * @param packet The not-null instance of the packet container.
+     * @return True if the world's environment is NORMAL (overworld).
+     */
     @Nullable
     @Override
     protected World getWorld(@Nullable Player player, @NotNull PacketContainer packet) {
@@ -91,8 +108,17 @@ public class LegacyNoBlackSkyAdapter extends NoBlackSkyAdapter {
 
                 result = player.getWorld();
 
+                if (isDebugMode()) {
+                    Logging.finest(ChatColor.AQUA + "Packet-world-instance: %s", result.getName());
+                }
+
             } catch (Exception ex) {
+
                 // if it fails, the black sky fix doesn't work for the current logging player.
+                if (isDebugMode()) {
+                    Logging.finest(ChatColor.AQUA + "Packet-world-instance: failed");
+                }
+
             }
 
         }
