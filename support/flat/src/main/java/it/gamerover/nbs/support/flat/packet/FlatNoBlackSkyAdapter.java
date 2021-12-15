@@ -6,6 +6,7 @@ import com.comphenix.protocol.PacketType;
 import com.comphenix.protocol.events.PacketContainer;
 import com.comphenix.protocol.reflect.StructureModifier;
 import com.dumptruckman.minecraft.util.Logging;
+import it.gamerover.nbs.config.ConfigManager;
 import it.gamerover.nbs.core.packet.NoBlackSkyAdapter;
 import it.gamerover.nbs.reflection.ServerVersion;
 import it.gamerover.nbs.reflection.util.Comparison;
@@ -94,8 +95,17 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
 
                 result = player.getWorld();
 
+                if (isDebugMode()) {
+                    Logging.finest(ChatColor.AQUA + "Packet-world-instance: %s", result.getName());
+                }
+
             } catch (Exception ex) {
+
                 // if it fails, the black sky fix doesn't work for the current logging player.
+                if (isDebugMode()) {
+                    Logging.finest(ChatColor.AQUA + "Packet-world-instance: failed");
+                }
+
             }
 
         }
@@ -138,6 +148,27 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
 
     }
 
+    /**
+     * @return True if the running server is at least 1.17.
+     */
+    private boolean isAtCavesAndCliffsUpdate() {
+
+        Comparison result = ReflectionUtil.compareServerVersions(currentVersion, ServerVersion.V1_17);
+        return result == Comparison.SAME || result == Comparison.MAJOR;
+
+    }
+
+    /**
+     * Check the world from Spigot 1.16.
+     *
+     * <p>
+     *     From Spigot 1.17 the CUSTOM World.Environment enum entry has been added.
+     *     So, if include-custom-worlds property from config is true, it will be handled.
+     * </p>
+     *
+     * @param packet The not-null instance of the packet container.
+     * @return True if the world's environment is NORMAL (overworld) (or CUSTOM if enabled).
+     */
     private boolean checkWorldAtLeastNetherUpdate(@NotNull PacketContainer packet) {
 
         World world = getWorld(null, packet);
@@ -159,10 +190,56 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
 
         }
 
-        return environment == World.Environment.NORMAL;
+        boolean result = environment == World.Environment.NORMAL;
+        
+        // If the env is not an overworld and the running server version >= 1.17
+        if (!result && isAtCavesAndCliffsUpdate()) {
+            result = checkCustomWorldCaveAndCliffsUpdate(environment);
+        }
+
+        return result;
 
     }
 
+    /**
+     * From Spigot 1.17, the World.Environment enumeration class has been changed and a new entry has been added.
+     * This new entry is called CUSTOM and is used when a custom world is added by the server manager.
+     *
+     * @param environment The not-null world's environment instance.
+     * @return True if the include-custom-worlds property is enabled and the world's environment is CUSTOM.
+     */
+    private boolean checkCustomWorldCaveAndCliffsUpdate(World.Environment environment) {
+
+        boolean includeCustomWorlds = ConfigManager.includeCustomWorlds();
+
+        if (isDebugMode()) {
+            Logging.finest(ChatColor.AQUA + "Packet-include-custom-world: %s", String.valueOf(includeCustomWorlds));
+        }
+
+        if (!includeCustomWorlds) {
+            return false;
+        }
+
+        return environment == World.Environment.CUSTOM;
+
+    }
+
+    /**
+     * From Spigot 1.8 to 1.15.2, the only way to check the world's environment is by using the player.
+     * From Spigot 1.16, the Joining and Respawn packet has been edited by implementing the "world name" property
+     * and other things.
+     *
+     * <p>
+     *     This method is afflicted by an irresolvable bug at least until Spigot 1.15.2.
+     *     In some cases, all things of the player couldn't be loaded in time so,
+     *     the world's instance may be null. This causes incorrect world checking
+     *     and cancellation of packet editing.
+     *     Luckily, from Spigot 1.16 this bug has been fixed (read the method content).
+     * </p>
+     *
+     * @param packet The not-null instance of the packet container.
+     * @return True if the world's environment is NORMAL (overworld).
+     */
     private boolean checkWorldBeforeNetherUpdate(@NotNull PacketContainer packet) {
 
         int worldDimension = -1;
@@ -206,7 +283,7 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
     }
 
     /**
-     * Edit the login or respawn packet if the server version is at least 1.16.
+     * Edits the login or respawn packet if the server version is at least 1.16.
      * @param packet The not-null instance of the packet container.
      */
     private void editPacketAtLeastNetherUpdate(@NotNull PacketContainer packet) {
@@ -245,7 +322,7 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
     }
 
     /**
-     * Edit the login or respawn packet if the server version is before 1.16.
+     * Edits the login or respawn packet if the server version is before 1.16.
      * @param packet The not-null instance of the packet container.
      */
     private void editPacketBeforeNetherUpdate(@NotNull PacketContainer packet) {
