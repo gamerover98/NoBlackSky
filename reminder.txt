@@ -21,4 +21,4 @@ deploy/target/NoBlackSky-*.*.jar
 ---------------
 
 Edit project version with this command at the root of the project:
- mvn versions:set -DnewVersion="2.4"
+ mvn versions:set -DnewVersion="2.5"
