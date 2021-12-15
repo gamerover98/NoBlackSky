@@ -100,6 +100,8 @@ public abstract class CoreHandler {
 					CoreHandler.getServerVersion().getVersion());
 			Logging.fine(ChatColor.YELLOW + "Config: %s property: %s", ConfigHolder.ALWAYS_ENABLED_PROPERTY_NAME,
 					String.valueOf(ConfigManager.isAlwaysEnabled()));
+			Logging.fine(ChatColor.YELLOW + "Config: %s property: %s", ConfigHolder.INCLUDE_C_WORLDS_PROPERTY_NAME,
+					String.valueOf(ConfigManager.includeCustomWorlds()));
 			Logging.fine(ChatColor.YELLOW + "Config: %s property: {%s}", ConfigHolder.WORLDS_PROPERTY_NAME,
 					Joiner.on(", ").join(ConfigManager.getWorlds()));
 
