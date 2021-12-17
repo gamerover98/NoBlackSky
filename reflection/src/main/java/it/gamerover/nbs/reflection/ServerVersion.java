@@ -18,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ServerVersion {
 
+    V1_18_1("1.18.1", 757, 2865, false),
     V1_18  ("1.18",   757, 2860, false),
     V1_17_1("1.17.1", 756, 2730, false),
     V1_17  ("1.17",   755, 2724, false),
@@ -215,7 +216,13 @@ public enum ServerVersion {
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
     public static boolean is1_18(@NotNull ServerVersion version) {
-        return version == V1_18;
+
+        switch (version) {
+            case V1_18:
+            case V1_18_1: return true;
+            default: return false;
+        }
+
     }
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
