@@ -201,6 +201,8 @@ public class ConfigManager {
 
         }
 
+        settingsManager.save();
+
     }
 
     /**
