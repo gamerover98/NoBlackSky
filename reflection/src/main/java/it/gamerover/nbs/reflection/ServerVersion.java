@@ -18,8 +18,10 @@ import org.jetbrains.annotations.Nullable;
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ServerVersion {
 
+    V1_18_2("1.18.2", 758, 2975, false),
     V1_18_1("1.18.1", 757, 2865, false),
     V1_18  ("1.18",   757, 2860, false),
+
     V1_17_1("1.17.1", 756, 2730, false),
     V1_17  ("1.17",   755, 2724, false),
 
@@ -219,7 +221,8 @@ public enum ServerVersion {
 
         switch (version) {
             case V1_18:
-            case V1_18_1: return true;
+            case V1_18_1:
+            case V1_18_2: return true;
             default: return false;
         }
 
