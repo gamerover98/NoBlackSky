@@ -7,7 +7,7 @@
     <parent>
         <groupId>it.gamerover.noblacksky</groupId>
         <artifactId>NoBlackSky</artifactId>
-        <version>2.5</version>
+        <version>2.6</version>
     </parent>
 
     <artifactId>NoBlackSky-Core</artifactId>
@@ -29,14 +29,14 @@
         <dependency>
             <groupId>it.gamerover.noblacksky</groupId>
             <artifactId>NoBlackSky-Reflection</artifactId>
-            <version>2.5</version>
+            <version>2.6</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>it.gamerover.noblacksky</groupId>
             <artifactId>NoBlackSky-Config</artifactId>
-            <version>2.5</version>
+            <version>2.6</version>
             <scope>provided</scope>
         </dependency>
 
