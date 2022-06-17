@@ -26,8 +26,8 @@ import java.util.Set;
 public abstract class NoBlackSkyAdapter extends PacketAdapter {
 
 	/**
-	 * ParadiseLand's package to auto-manage its worlds.
-	 * https://www.spigotmc.org/resources/paradise-land-1-8-8-1-16-x-skyworld-generator.28056/
+	 * <a href="https://www.spigotmc.org/resources/paradise-land-1-8-8-1-16-x-skyworld-generator.28056/">ParadiseLand</a>
+	 * 's package to auto-manage its worlds.
 	 */
 	private static final String PARADISE_LAND_PACKAGE = "it.gamerover.paradise";
 

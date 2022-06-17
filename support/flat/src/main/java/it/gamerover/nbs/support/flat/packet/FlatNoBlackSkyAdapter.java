@@ -27,7 +27,7 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
 
     /**
      * isFlat field on the 1.16+ packet is at index 4.
-     * Wiki at: https://wiki.vg/Protocol#Respawn
+     * Wiki at: <a href="https://wiki.vg/Protocol#Respawn">Respawn</a>
      */
     private static final int LOGIN_IS_FLAT_BOOLEAN_FIELD_INDEX = 4;
 
@@ -38,7 +38,7 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
 
     /**
      * This world type will fix the black sky under height 61.
-     * Wiki at: https://wiki.vg/Protocol#Join_Game
+     * Wiki at: <a href="https://wiki.vg/Protocol#Join_Game">Join Game</a>
      */
     private static final WorldType FLAT_WORLD_TYPE = WorldType.FLAT;
 
@@ -203,7 +203,7 @@ public class FlatNoBlackSkyAdapter extends NoBlackSkyAdapter {
 
     /**
      * From Spigot 1.17, the World.Environment enumeration class has been changed and a new entry has been added.
-     * This new entry is called CUSTOM and is used when a custom world is added by the server manager.
+     * This new entry is called CUSTOM, and it is used when a custom world is added by the server manager.
      *
      * @param environment The not-null world's environment instance.
      * @return True if the include-custom-worlds property is enabled and the world's environment is CUSTOM.

@@ -11,12 +11,15 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * You can find protocol and data version
- * at https://minecraft.gamepedia.com/Protocol_version
+ * at <a href="https://minecraft.gamepedia.com/Protocol_version">Minecraft protocol versions</a>
  */
 @ToString
 @SuppressWarnings({"squid:S00100", "unused"})
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ServerVersion {
+
+    // Add here the following versions ...
+    V1_19  ("1.19",   759, 3105, false),
 
     V1_18_2("1.18.2", 758, 2975, false),
     V1_18_1("1.18.1", 757, 2865, false),
@@ -214,6 +217,11 @@ public enum ServerVersion {
 
         return v1.isFlat() && v2.isFlat();
 
+    }
+
+    @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
+    public static boolean is1_19(@NotNull ServerVersion version) {
+        return version.equals(V1_19);
     }
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
