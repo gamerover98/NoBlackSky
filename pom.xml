@@ -6,7 +6,7 @@
 
     <groupId>it.gamerover.noblacksky</groupId>
     <artifactId>NoBlackSky</artifactId>
-    <version>2.6</version>
+    <version>2.7</version>
     <packaging>pom</packaging>
 
 	<modules>
@@ -14,7 +14,7 @@
         <module>core</module>
         <module>support</module>
         <module>config</module>
-	<module>deploy</module>
+	    <module>deploy</module>
 	</modules>
 
     <name>NoBlackSky</name>
