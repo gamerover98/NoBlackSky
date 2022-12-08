@@ -26,6 +26,9 @@ public final class MCMinecraftVersion extends MCReflection {
     /**
      * Gets the server release target version.
      * For instance: 1.17, 1.17.1, 1.18, etc.
+     * <p>
+     *     From Spigot 1.19.3, this field doesn't exist and will be valued with the name.
+     * </p>
      */
     @Getter @NotNull
     private final String releaseTarget;
@@ -51,19 +54,20 @@ public final class MCMinecraftVersion extends MCReflection {
 
         }
 
+        String rt = name;
+
         try {
 
             Method getReleaseTargetMethod = super.getMethod(minecraftVersionClass, GET_RELEASE_TARGET_METHOD_NAME);
-            this.releaseTarget = (String) getReleaseTargetMethod.invoke(gameVersionInstance);
+            rt = (String) getReleaseTargetMethod.invoke(gameVersionInstance);
 
-        } catch (Exception ex) {
-
-            String errorMessage = getMinecraftPackage() + "." + MINECRAFT_VERSION_CLASS_NAME
-                    + "." + GET_RELEASE_TARGET_METHOD_NAME + "() method";
-            throw new ReflectionException(errorMessage, ex);
-
+        } catch (Exception ex) { // nothing to do.
+            /* String errorMessage = getMinecraftPackage() + "." + MINECRAFT_VERSION_CLASS_NAME
+             *        + "." + GET_RELEASE_TARGET_METHOD_NAME + "() method";
+             * throw new ReflectionException(errorMessage, ex);
+            */
+        } finally {
+            this.releaseTarget = rt;
         }
-
     }
-
 }
