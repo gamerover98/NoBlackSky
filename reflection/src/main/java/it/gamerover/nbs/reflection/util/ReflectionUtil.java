@@ -32,6 +32,14 @@ public class ReflectionUtil {
     }
 
     /**
+     * @param rawServerVersion A raw server version like: v1_19_R3
+     * @return An array where [1] = 1, [2] = 19 and [3] = R3.
+     */
+    public static String[] splitRawServerVersion(@NotNull String rawServerVersion) {
+        return rawServerVersion.split("_");
+    }
+
+    /**
      * Check if a server version is major than another.
      *
      * @param v1 The server version to compare to v2.

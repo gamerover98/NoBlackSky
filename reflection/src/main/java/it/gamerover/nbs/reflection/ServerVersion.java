@@ -20,6 +20,7 @@ public enum ServerVersion {
 
     // Add here the following versions ...
     // From Minecraft 1.19.3, Mojang decided to ruin the developers' life.
+    V1_19_4("1.19.4", 762, 3337, false),
     V1_19_3("1.19.3", 761, 3218, false),
     V1_19_2("1.19.2", 760, 3120, false),
     V1_19_1("1.19.1", 760, 3117, false),
@@ -229,7 +230,8 @@ public enum ServerVersion {
             case V1_19:
             case V1_19_1:
             case V1_19_2:
-            case V1_19_3: return true;
+            case V1_19_3:
+            case V1_19_4: return true;
             default: return false;
         }
 
