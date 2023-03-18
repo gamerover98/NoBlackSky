@@ -4,25 +4,12 @@ import it.gamerover.nbs.reflection.craftbukkit.CBCraftServer;
 import it.gamerover.nbs.reflection.minecraft.MCMinecraftVersion;
 import it.gamerover.nbs.reflection.minecraft.MCSharedConstants;
 import it.gamerover.nbs.reflection.minecraft.MCMinecraftServer;
+import it.gamerover.nbs.reflection.util.ReflectionUtil;
 import lombok.Getter;
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class ReflectionContainer {
-
-    private static final String DOT = ".";
-    private static final String COMMA = ",";
-
-    /**
-     * The version name from the package: org.bukkit.craftbukkit.1_#_R§
-     *
-     * Where:
-     * - # is the version (8, 12, 17, ...)
-     * - § is the Revision (1, 2, 3, ...)
-     */
-    private static final String COMPLETE_SERVER_VERSION = calculateServerVersion();
 
     /**
      * Gets the CraftBukkit reflections.
@@ -38,9 +25,10 @@ public final class ReflectionContainer {
 
     public ReflectionContainer() throws ReflectionException {
 
-        this.craftBukkit = new CraftBukkit(COMPLETE_SERVER_VERSION);
-        this.minecraft   = new Minecraft(COMPLETE_SERVER_VERSION);
+        RawServerVersion rawServerVersion = ReflectionUtil.findRawServerVersion();
 
+        this.craftBukkit = new CraftBukkit(rawServerVersion);
+        this.minecraft   = new Minecraft(rawServerVersion);
     }
 
     @Getter
@@ -49,10 +37,9 @@ public final class ReflectionContainer {
 
         private final CBCraftServer craftServer;
 
-        private CraftBukkit(String completeServerVersion) throws ReflectionException {
-            this.craftServer = new CBCraftServer(completeServerVersion);
+        private CraftBukkit(RawServerVersion rawServerVersion) throws ReflectionException {
+            this.craftServer = new CBCraftServer(rawServerVersion);
         }
-
     }
 
     @Getter
@@ -71,41 +58,19 @@ public final class ReflectionContainer {
         @Nullable
         private MCMinecraftVersion minecraftVersion;
 
-        private Minecraft(String completeServerVersion) throws ReflectionException {
+        private Minecraft(RawServerVersion rawServerVersion) throws ReflectionException {
 
             Object minecraftServerInstance = craftBukkit.getCraftServer().getMinecraftServerInstance();
 
-            this.minecraftServer = new MCMinecraftServer(completeServerVersion, minecraftServerInstance);
-            this.sharedConstants = new MCSharedConstants(completeServerVersion);
+            this.minecraftServer = new MCMinecraftServer(rawServerVersion, minecraftServerInstance);
+            this.sharedConstants = new MCSharedConstants(rawServerVersion);
 
             Object gameVersionInstance = sharedConstants.getGameVersionInstance();
 
             // MinecraftVersion class is available from Spigot 1.17.
             if (gameVersionInstance != null) {
-                this.minecraftVersion = new MCMinecraftVersion(completeServerVersion, gameVersionInstance);
+                this.minecraftVersion = new MCMinecraftVersion(rawServerVersion, gameVersionInstance);
             }
-
         }
-
     }
-
-    /**
-     * Gets the version name from the package: org.bukkit.craftbukkit.1_#_R§
-     *
-     * Where:
-     * - # is the version (8, 12, 17, ...)
-     * - § is the Revision (1, 2, 3, ...)
-     *
-     * @return The internal minecraft version of the craftbukkit package name.
-     */
-    @NotNull
-    private static String calculateServerVersion() {
-
-        Server server = Bukkit.getServer();
-        String serverClassName = server.getClass().getPackage().getName();
-
-        return serverClassName.replace(DOT, COMMA).split(COMMA)[3];
-
-    }
-
 }

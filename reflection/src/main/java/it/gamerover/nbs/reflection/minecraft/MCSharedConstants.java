@@ -1,5 +1,6 @@
 package it.gamerover.nbs.reflection.minecraft;
 
+import it.gamerover.nbs.reflection.RawServerVersion;
 import it.gamerover.nbs.reflection.ReflectionException;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -25,12 +26,12 @@ public final class MCSharedConstants extends MCReflection {
     private final Object gameVersionInstance;
 
     @SuppressWarnings("squid:S2637")
-    public MCSharedConstants(@NotNull String completeServerVersion) throws ReflectionException {
+    public MCSharedConstants(@NotNull RawServerVersion rawServerVersion) throws ReflectionException {
 
-        super(completeServerVersion);
+        super(rawServerVersion);
 
         // If it is after 1.16.5
-        if (!isBefore1_17(completeServerVersion)) {
+        if (!isBefore1_17(rawServerVersion)) {
             this.gameVersionInstance = obtainGameVersion();
         } else {
             this.gameVersionInstance = null;

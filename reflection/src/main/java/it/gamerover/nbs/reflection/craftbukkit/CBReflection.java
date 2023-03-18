@@ -1,5 +1,6 @@
 package it.gamerover.nbs.reflection.craftbukkit;
 
+import it.gamerover.nbs.reflection.RawServerVersion;
 import it.gamerover.nbs.reflection.Reflection;
 import it.gamerover.nbs.reflection.ReflectionException;
 
@@ -9,8 +10,8 @@ public class CBReflection extends Reflection {
 
     private final String craftBukkitPackage;
 
-    public CBReflection(String completeServerVersion) {
-        this.craftBukkitPackage = CRAFTBUKKIT_PACKAGE + '.' + completeServerVersion;
+    public CBReflection(RawServerVersion rawServerVersion) {
+        this.craftBukkitPackage = CRAFTBUKKIT_PACKAGE + ".v" + rawServerVersion.getRaw();
     }
 
     public Class<?> getCraftBukkitClass(String className) throws ReflectionException {

@@ -1,6 +1,10 @@
 package it.gamerover.nbs.reflection.util;
 
+import it.gamerover.nbs.reflection.RawServerVersion;
+import it.gamerover.nbs.reflection.ReflectionException;
 import it.gamerover.nbs.reflection.ServerVersion;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.jetbrains.annotations.NotNull;
 
 public class ReflectionUtil {
@@ -32,11 +36,23 @@ public class ReflectionUtil {
     }
 
     /**
-     * @param rawServerVersion A raw server version like: v1_19_R3
-     * @return An array where [1] = 1, [2] = 19 and [3] = R3.
+     * Gets the version name from the package: org.bukkit.craftbukkit.1_#_R§
+     *
+     * Where:
+     * - # is the version number (8, 12, 17, ...)
+     * - § is the Revision number (1, 2, 3, ...)
+     *
+     * @return The internal minecraft version of the craftbukkit package name.
      */
-    public static String[] splitRawServerVersion(@NotNull String rawServerVersion) {
-        return rawServerVersion.split("_");
+    @NotNull
+    public static RawServerVersion findRawServerVersion() throws ReflectionException {
+
+        Server server = Bukkit.getServer();
+        String serverClassName = server.getClass().getPackage().getName();
+
+        String raw = serverClassName.split(DOT)[3];
+        return new RawServerVersion(raw);
+
     }
 
     /**

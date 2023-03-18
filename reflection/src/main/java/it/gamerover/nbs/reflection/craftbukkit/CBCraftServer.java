@@ -2,6 +2,7 @@ package it.gamerover.nbs.reflection.craftbukkit;
 
 import java.lang.reflect.Method;
 
+import it.gamerover.nbs.reflection.RawServerVersion;
 import it.gamerover.nbs.reflection.ReflectionException;
 import lombok.Getter;
 import org.bukkit.Bukkit;
@@ -25,9 +26,8 @@ public final class CBCraftServer extends CBReflection {
     @Getter
     private final Method getServerMethod;
 
-    public CBCraftServer(String completeServerVersion) throws ReflectionException {
-
-        super(completeServerVersion);
+    public CBCraftServer(RawServerVersion rawServerVersion) throws ReflectionException {
+        super(rawServerVersion);
 
         this.craftServerClass = super.getCraftBukkitClass(CRAFT_SERVER_CLASS_NAME);
         this.getServerMethod  = super.getMethod(craftServerClass, GET_SERVER_METHOD_NAME);

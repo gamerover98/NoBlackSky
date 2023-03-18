@@ -168,7 +168,7 @@ public abstract class CoreHandler {
 		ServerVersion runningVersion = ServerVersion.getRunningServerVersion(reflectionContainer);
 
 		// The server running with an unknown server version.
-		if (runningVersion == null) {
+		if (runningVersion == ServerVersion.NEXT) {
 
 			ServerVersion latestVersion = ServerVersion.getLatest(false);
 			String message = "Cannot find the current server version, "
@@ -178,15 +178,22 @@ public abstract class CoreHandler {
 			Logging.warning(ChatColor.YELLOW + message);
 			runningVersion = latestVersion;
 
+		} else if (runningVersion == ServerVersion.PREVIOUS) {
+
+			ServerVersion firstVersion = ServerVersion.getFirst(true);
+			String message = "Cannot find the current server version, "
+					+ "attempting to start the plugin with the oldest ("
+					+ firstVersion.getVersion() + ") supported version ...";
+
+			Logging.warning(ChatColor.YELLOW + message);
+			runningVersion = firstVersion;
+
 		} else {
 
 			String message = "Detected " + runningVersion.getVersion() + " server version";
 			Logging.info(ChatColor.GREEN + message);
-
 		}
 
 		serverVersion = runningVersion;
-
 	}
-
 }

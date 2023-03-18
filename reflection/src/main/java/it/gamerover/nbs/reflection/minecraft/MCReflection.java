@@ -1,5 +1,6 @@
 package it.gamerover.nbs.reflection.minecraft;
 
+import it.gamerover.nbs.reflection.RawServerVersion;
 import it.gamerover.nbs.reflection.Reflection;
 import it.gamerover.nbs.reflection.ReflectionException;
 import lombok.AccessLevel;
@@ -21,7 +22,7 @@ public class MCReflection extends Reflection {
 
     /**
      * The not compliant Native Minecraft package.
-     * This string will be concatenated with the complete server version.
+     * This string will be concatenated with the raw server version.
      */
     private static final String MINECRAFT_PACKAGE = "net.minecraft";
 
@@ -29,40 +30,39 @@ public class MCReflection extends Reflection {
 
     /**
      * The not compliant Native Minecraft package.
-     * This string will be concatenated with the complete server version.
+     * This string will be concatenated with the raw server version.
      */
     private static final String BEFORE_1_17_MINECRAFT_PACKAGE = MINECRAFT_PACKAGE + '.' + SERVER_WORD;
 
     /**
-     * The complete Native Minecraft package (Ex: net.minecraft.server.v1_8_R3.ClassName).
+     * The raw Native Minecraft package (Ex: net.minecraft.server.v1_8_R3.ClassName).
      *
      * <p>
-     *     From 1.17 the Minecraft package doesn't contain
-     *     the revision version (Ex: net.minecraft.server.ClassName)
+     * From 1.17 the Minecraft package doesn't contain
+     * the revision version (Ex: net.minecraft.server.ClassName)
      * </p>
      */
     @Getter(AccessLevel.PROTECTED)
     private final String minecraftPackage;
 
-
     /**
-     * @param completeServerVersion The NMS complete server version like V1_8_R3
+     * @param rawServerVersion The NMS raw server version like V1_8_R3
      */
-    public MCReflection(@NotNull String completeServerVersion) {
-        this(completeServerVersion, null);
+    public MCReflection(@NotNull RawServerVersion rawServerVersion) {
+        this(rawServerVersion, null);
     }
 
     /**
-     * The completeServerVersion will be used until 1.16.5 to complete the NMS package.
+     * The rawServerVersion will be used until 1.16.5 to raw the NMS package.
      * > net.minecraft.v1_16_R1.*;
-     *
+     * <p>
      * From 1.17, the NMS package has changed: net.minecraft.server.*
      * > This new package has sub-packages like net.minecraft.server.something.everything;
      *
-     * @param completeServerVersion The not-null NMS complete server version like V1_8_R3.
-     * @param subPackage The nullable/empty string of a sub package of net.minecraft.*.#.
+     * @param rawServerVersion The not-null NMS raw server version like V1_8_R3.
+     * @param subPackage       The nullable/empty string of a sub package of net.minecraft.*.#.
      */
-    public MCReflection(@NotNull String completeServerVersion, @Nullable String subPackage) {
+    public MCReflection(@NotNull RawServerVersion rawServerVersion, @Nullable String subPackage) {
 
         if (subPackage == null) {
             subPackage = "";
@@ -72,10 +72,10 @@ public class MCReflection extends Reflection {
         String pack;
 
         // Before 1.17
-        if (isBefore1_17(completeServerVersion)) {
+        if (isBefore1_17(rawServerVersion)) {
 
             // net.minecraft.server.v1_16_R3
-            pack = BEFORE_1_17_MINECRAFT_PACKAGE + '.' + completeServerVersion;
+            pack = BEFORE_1_17_MINECRAFT_PACKAGE + ".v" + rawServerVersion.getRaw();
 
             /*
              * From 1.8 to 1.16.5, if the sub-folder starts with "server", it will
@@ -120,7 +120,7 @@ public class MCReflection extends Reflection {
      *
      * @param packageName If in the future Spigot decide to add another sub-package, use it.
      *                    By default, this value is "".
-     * @param className The not null class name.
+     * @param className   The not null class name.
      * @return The not null Native class.
      * @throws ReflectionException If the class doesn't exist.
      */
@@ -131,28 +131,11 @@ public class MCReflection extends Reflection {
     }
 
     /**
-     * @param version The not null complete server version: v1_16_R3
-     * @return True if the server version is before 1.17 caves & cliffs update.
+     * @param rawServerVersion The not null {@link RawServerVersion}.
+     * @return True if the server rawServerVersion is before 1.17 caves & cliffs update.
      */
     @SuppressWarnings("squid:S100") // SonarLint: Rename this method name to match the regular expression.
-    protected static boolean isBefore1_17(@NotNull String version) {
-
-        if (!version.startsWith("v")) {
-            throw new IllegalArgumentException("The minecraft version needs to start with 'v'");
-        }
-
-        version = version.substring(1);
-        String[] split = version.split("_");
-
-        int firstNumber  = Integer.parseInt(split[0]);
-        int secondNumber = Integer.parseInt(split[1]);
-
-        if (firstNumber != 1) {
-            throw new IllegalArgumentException("The minecraft versions needs to start with 1.*");
-        }
-
-        return secondNumber < CAVES_AND_CLIFFS_UPDATE_NUMBER;
-
+    protected static boolean isBefore1_17(@NotNull RawServerVersion rawServerVersion) {
+        return rawServerVersion.getVersionNumber() < CAVES_AND_CLIFFS_UPDATE_NUMBER;
     }
-
 }

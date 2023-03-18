@@ -1,7 +1,7 @@
 package it.gamerover.nbs.reflection.minecraft;
 
+import it.gamerover.nbs.reflection.RawServerVersion;
 import it.gamerover.nbs.reflection.ReflectionException;
-import it.gamerover.nbs.reflection.util.ReflectionUtil;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 
@@ -27,7 +27,7 @@ public final class MCMinecraftVersion extends MCReflection {
 
     /**
      * Gets the server release target version.
-     * For instance: 1.17, 1.17.1, 1.18, etc.
+     * For instance: 1.17, 1.17.1, 1.18, 1.19 etc.
      * <p>
      *     From Spigot 1.19.3, this field doesn't exist and will be valued with the name.
      * </p>
@@ -36,13 +36,13 @@ public final class MCMinecraftVersion extends MCReflection {
     private final String releaseTarget;
 
     @SuppressWarnings("squid:S2637")
-    public MCMinecraftVersion(@NotNull String completeServerVersion,
+    public MCMinecraftVersion(@NotNull RawServerVersion rawServerVersion,
                               @NotNull Object gameVersionInstance) throws ReflectionException {
 
-        super(completeServerVersion);
+        super(rawServerVersion);
 
         Class<?> minecraftVersionClass = super.getMinecraftClass(MINECRAFT_VERSION_CLASS_NAME);
-        this.name = getName(minecraftVersionClass, completeServerVersion, gameVersionInstance);
+        this.name = getName(minecraftVersionClass, rawServerVersion, gameVersionInstance);
         String releaseTargetLocal = name;
 
         try {
@@ -61,16 +61,13 @@ public final class MCMinecraftVersion extends MCReflection {
     }
 
     private String getName(Class<?> minecraftVersionClass,
-                           String completeServerVersion,
+                           RawServerVersion rawServerVersion,
                            Object gameVersionInstance) throws ReflectionException {
-
-        String[] split = ReflectionUtil.splitRawServerVersion(completeServerVersion);
-        int versionNumber = Integer.parseInt(split[1]);
-        int releaseNumber = Integer.parseInt(String.valueOf(split[2].charAt(1))); // For R3, get 3.
         String getNameMethodName;
 
         // if version is lower or equal than 1.19.3
-        if (versionNumber < 19 || (versionNumber == 19 && releaseNumber < 3)) {
+        if (rawServerVersion.getVersionNumber() < 19
+                || (rawServerVersion.getVersionNumber() == 19 && rawServerVersion.getRevisionNumber() < 3)) {
             getNameMethodName = GET_NAME_METHOD_NAME_1;
         } else { // 1.19.4+
             getNameMethodName = GET_NAME_METHOD_NAME_2;

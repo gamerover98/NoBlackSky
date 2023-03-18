@@ -55,7 +55,7 @@ public class NoBlackSky extends JavaPlugin {
         } catch (ReflectionException firstEx) {
 
             String message = "Please report this error on the issues page on GitHub or Spigot forum";
-            Logging.log(Level.SEVERE, message, firstEx);
+            getLogger().log(Level.SEVERE, message, firstEx);
 
             isPluginStartable = false;
 

@@ -2,6 +2,7 @@ package it.gamerover.nbs.reflection;
 
 import it.gamerover.nbs.reflection.minecraft.MCMinecraftServer;
 import it.gamerover.nbs.reflection.minecraft.MCMinecraftVersion;
+import it.gamerover.nbs.reflection.util.ReflectionUtil;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -14,72 +15,83 @@ import org.jetbrains.annotations.Nullable;
  * at <a href="https://minecraft.gamepedia.com/Protocol_version">Minecraft protocol versions</a>
  */
 @ToString
-@SuppressWarnings({"squid:S00100", "unused"})
+@SuppressWarnings({"squid:S00100", "squid:S1192", "unused"})
 @RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public enum ServerVersion {
 
+    // To indicate later versions.
+    NEXT    ("next", null, Short.MAX_VALUE,Short.MAX_VALUE, false),
+
     // Add here the following versions ...
-    // From Minecraft 1.19.3, Mojang decided to ruin the developers' life.
-    V1_19_4("1.19.4", 762, 3337, false),
-    V1_19_3("1.19.3", 761, 3218, false),
-    V1_19_2("1.19.2", 760, 3120, false),
-    V1_19_1("1.19.1", 760, 3117, false),
-    V1_19  ("1.19",   759, 3105, false),
+    V1_19_4 ("1.19.4",  getRawServerVersion("v1_19_R3"), 762, 3337, false),
+    // Starting with Minecraft 1.19.3, Mojang decided to ruin developers' lives :/
+    V1_19_3 ("1.19.3",  getRawServerVersion("v1_19_R2"), 761, 3218, false),
+    V1_19_2 ("1.19.2",  getRawServerVersion("v1_19_R1"), 760, 3120, false),
+    V1_19_1 ("1.19.1",  getRawServerVersion("v1_19_R1"), 760, 3117, false),
+    V1_19   ("1.19",    getRawServerVersion("v1_19_R1"), 759, 3105, false),
 
-    V1_18_2("1.18.2", 758, 2975, false),
-    V1_18_1("1.18.1", 757, 2865, false),
-    V1_18  ("1.18",   757, 2860, false),
+    V1_18_2 ("1.18.2",  getRawServerVersion("v1_18_R2"), 758, 2975, false),
+    V1_18_1 ("1.18.1",  getRawServerVersion("v1_18_R1"), 757, 2865, false),
+    V1_18   ("1.18",    getRawServerVersion("v1_18_R1"), 757, 2860, false),
 
-    V1_17_1("1.17.1", 756, 2730, false),
-    V1_17  ("1.17",   755, 2724, false),
+    V1_17_1 ("1.17.1",  getRawServerVersion("v1_17_R1"), 756, 2730, false),
+    V1_17   ("1.17",    getRawServerVersion("v1_17_R1"), 755, 2724, false),
 
-    V1_16_5("1.16.5", 754, 2586, false),
-    V1_16_4("1.16.4", 754, 2584, false),
-    V1_16_3("1.16.3", 753, 2580, false),
-    V1_16_2("1.16.2", 751, 2578, false),
-    V1_16_1("1.16.1", 736, 2567, false),
-    V1_16  ("1.16",   735, 2566, false),
+    V1_16_5 ("1.16.5",  getRawServerVersion("v1_16_R3"), 754, 2586, false),
+    V1_16_4 ("1.16.4",  getRawServerVersion("v1_16_R3"), 754, 2584, false),
+    V1_16_3 ("1.16.3",  getRawServerVersion("v1_16_R2"), 753, 2580, false),
+    V1_16_2 ("1.16.2",  getRawServerVersion("v1_16_R2"), 751, 2578, false),
+    V1_16_1 ("1.16.1",  getRawServerVersion("v1_16_R1"), 736, 2567, false),
+    V1_16   ("1.16",    getRawServerVersion("v1_16_R1"), 735, 2566, false),
 
-    V1_15_2("1.15.2", 578, 2230, false),
-    V1_15_1("1.15.1", 575, 2227, false),
-    V1_15  ("1.15",   573, 2225, false),
+    V1_15_2 ("1.15.2",  getRawServerVersion("v1_15_R1"), 578, 2230, false),
+    V1_15_1 ("1.15.1",  getRawServerVersion("v1_15_R1"), 575, 2227, false),
+    V1_15   ("1.15",    getRawServerVersion("v1_15_R1"), 573, 2225, false),
 
-    V1_14_4("1.14.4", 498, 1976, false),
-    V1_14_3("1.14.3", 490, 1968, false),
-    V1_14_2("1.14.2", 485, 1963, false),
-    V1_14_1("1.14.1", 480, 1957, false),
-    V1_14  ("1.14",   477, 1952, false),
+    V1_14_4 ("1.14.4",  getRawServerVersion("v1_14_R1"), 498, 1976, false),
+    V1_14_3 ("1.14.3",  getRawServerVersion("v1_14_R1"), 490, 1968, false),
+    V1_14_2 ("1.14.2",  getRawServerVersion("v1_14_R1"), 485, 1963, false),
+    V1_14_1 ("1.14.1",  getRawServerVersion("v1_14_R1"), 480, 1957, false),
+    V1_14   ("1.14",    getRawServerVersion("v1_14_R1"), 477, 1952, false),
 
-    V1_13_2("1.13.2", 404, 1631, false),
-    V1_13_1("1.13.1", 401, 1628, false),
-    V1_13  ("1.13",   393, 1519, false),
+    V1_13_2 ("1.13.2",  getRawServerVersion("v1_13_R2"), 404, 1631, false),
+    V1_13_1 ("1.13.1",  getRawServerVersion("v1_13_R2"), 401, 1628, false),
+    V1_13   ("1.13",    getRawServerVersion("v1_13_R1"), 393, 1519, false),
 
-    V1_12_2("1.12.2", 340, 1343, true),
-    V1_12_1("1.12.1", 338, 1241, true),
-    V1_12  ("1.12",   335, 1139, true),
+    V1_12_2 ("1.12.2",  getRawServerVersion("v1_12_R1"), 340, 1343, true),
+    V1_12_1 ("1.12.1",  getRawServerVersion("v1_12_R1"), 338, 1241, true),
+    V1_12   ("1.12",    getRawServerVersion("v1_12_R1"), 335, 1139, true),
 
-    V1_11_2("1.11.2", 316, 922, true),
-    V1_11_1("1.11.1", 316, 921, true),
-    V1_11  ("1.11",   315, 819, true),
+    V1_11_2 ("1.11.2",  getRawServerVersion("v1_11_R1"), 316, 922, true),
+    V1_11_1 ("1.11.1",  getRawServerVersion("v1_11_R1"), 316, 921, true),
+    V1_11   ("1.11",    getRawServerVersion("v1_11_R1"), 315, 819, true),
 
-    V1_10_2("1.10.2", 210, 512, true),
-    V1_10_1("1.10.1", 210, 511, true),
-    V1_10  ("1.10",   210, 510, true),
+    V1_10_2 ("1.10.2",  getRawServerVersion("v1_10_R1"), 210, 512, true),
+    V1_10_1 ("1.10.1",  getRawServerVersion("v1_10_R1"), 210, 511, true),
+    V1_10   ("1.10",    getRawServerVersion("v1_10_R1"), 210, 510, true),
 
-    V1_9_4 ("1.9.4",  110, 184, true),
-    V1_9_3 ("1.9.3",  110, 183, true),
-    V1_9_2 ("1.9.2",  109, 176, true),
-    V1_9_1 ("1.9.1",  108, 175, true),
-    V1_9   ("1.9",    107, 169, true),
+    V1_9_4  ("1.9.4",   getRawServerVersion("v1_9_R2"),  110, 184, true),
+    V1_9_3  ("1.9.3",   getRawServerVersion("v1_9_R2"),  110, 183, true),
+    V1_9_2  ("1.9.2",   getRawServerVersion("v1_9_R2"),  109, 176, true),
+    V1_9_1  ("1.9.1",   getRawServerVersion("v1_9_R1"),  108, 175, true),
+    V1_9    ("1.9",     getRawServerVersion("v1_9_R2"),  107, 169, true),
 
     // There is no DataVersion for minecraft 1.8.8
-    V1_8_8 ("1.8.8",  47, 0, true);
+    V1_8_8  ("1.8.8",   getRawServerVersion("v1_8_R3"),  47, 0, true),
+    // For versions that are too old...
+    PREVIOUS("previous", null,  -1, -1, true);
 
     /**
      * Gets the textual version, like "1.12.2" or "1.16.5".
      */
     @Getter @NotNull
     private final String version;
+
+    /**
+     * Gets the raw server (from craftbukkit), like "1_19_R3".
+     */
+    @Getter @Nullable
+    private final RawServerVersion rawServerVersion;
 
     /**
      * A protocol version number (PVN) is an integer used to check for
@@ -116,9 +128,8 @@ public enum ServerVersion {
      * @return The current running ServerVersion instance.
      *         Null if the server version is not supported.
      */
-    @Nullable
-    public static ServerVersion getRunningServerVersion(@NotNull ReflectionContainer container) {
-
+    @NotNull
+    public static ServerVersion getRunningServerVersion(@NotNull ReflectionContainer container) throws ReflectionException {
         ServerVersion result = null;
         String stringVersion;
 
@@ -138,13 +149,21 @@ public enum ServerVersion {
             result = ServerVersion.getVersion(stringVersion);
         }
 
-        return result;
+        if (result == null) {
+            RawServerVersion currentRawServerVersion = ReflectionUtil.findRawServerVersion();
+            RawServerVersion firstLegacyVersion = getFirst(true).getRawServerVersion(); // 1.8.8
+            assert firstLegacyVersion != null;
 
+            int currentVersionNumber = currentRawServerVersion.getVersionNumber();
+            int legacyVersionNumber = firstLegacyVersion.getVersionNumber();
+            result = currentVersionNumber < legacyVersionNumber ? PREVIOUS : NEXT;
+        }
+
+        return result;
     }
 
     @Nullable
     public static ServerVersion getVersionWithDataVersion(int dataVersion) {
-
         ServerVersion[] versions = ServerVersion.values();
 
         for (int i = 0 ; i < versions.length - 1 ; i++) {
@@ -158,7 +177,6 @@ public enum ServerVersion {
             if (dataVersion >= currentDataVersion && dataVersion < nextDataVersion) {
                 return currentVersion;
             }
-
         }
 
         ServerVersion latest = versions[versions.length - 1];
@@ -169,7 +187,6 @@ public enum ServerVersion {
         }
 
         return null;
-
     }
 
     /**
@@ -187,11 +204,9 @@ public enum ServerVersion {
             if (version.getVersion().equalsIgnoreCase(versionString)) {
                 return version;
             }
-
         }
 
         return null;
-
     }
 
     @Nullable
@@ -202,11 +217,9 @@ public enum ServerVersion {
             if (version.getProtocolVersion() == protocolVersion) {
                 return version;
             }
-
         }
 
         return null;
-
     }
 
     /**
@@ -223,6 +236,10 @@ public enum ServerVersion {
         return v1.isFlat() && v2.isFlat();
     }
 
+    public static boolean isNext(@NotNull ServerVersion version) {
+        return version.equals(NEXT);
+    }
+
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
     public static boolean is1_19(@NotNull ServerVersion version) {
 
@@ -234,7 +251,6 @@ public enum ServerVersion {
             case V1_19_4: return true;
             default: return false;
         }
-
     }
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
@@ -246,7 +262,6 @@ public enum ServerVersion {
             case V1_18_2: return true;
             default: return false;
         }
-
     }
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
@@ -257,7 +272,6 @@ public enum ServerVersion {
             case V1_17_1: return true;
             default: return false;
         }
-
     }
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
@@ -272,7 +286,6 @@ public enum ServerVersion {
             case V1_16_5: return true;
             default: return false;
         }
-
     }
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
@@ -284,7 +297,6 @@ public enum ServerVersion {
             case V1_15_2: return true;
             default: return false;
         }
-
     }
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
@@ -298,7 +310,6 @@ public enum ServerVersion {
             case V1_14_4: return true;
             default: return false;
         }
-
     }
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
@@ -310,7 +321,6 @@ public enum ServerVersion {
             case V1_13_2: return true;
             default: return false;
         }
-
     }
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
@@ -322,7 +332,6 @@ public enum ServerVersion {
             case V1_12_2: return true;
             default: return false;
         }
-
     }
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
@@ -334,7 +343,6 @@ public enum ServerVersion {
             case V1_11_2: return true;
             default: return false;
         }
-
     }
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
@@ -343,10 +351,11 @@ public enum ServerVersion {
         switch (version) {
             case V1_10:
             case V1_10_1:
-            case V1_10_2: return true;
-            default: return false;
+            case V1_10_2:
+                return true;
+            default:
+                return false;
         }
-
     }
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
@@ -360,11 +369,14 @@ public enum ServerVersion {
             case V1_9_4: return true;
             default: return false;
         }
-
     }
 
     public static boolean is1_8_8(@NotNull ServerVersion version) {
         return version == V1_8_8;
+    }
+
+    public static boolean isPrevious(@NotNull ServerVersion version) {
+        return version.equals(PREVIOUS);
     }
 
     /**
@@ -379,12 +391,9 @@ public enum ServerVersion {
         if (legacy) {
             return ServerVersion.V1_12_2;
         } else {
-
             ServerVersion[] versions = ServerVersion.values();
-            return versions[0];
-
+            return versions[1];
         }
-
     }
 
     /**
@@ -395,13 +404,17 @@ public enum ServerVersion {
      */
     @NotNull
     public static ServerVersion getFirst(boolean legacy) {
-
-        if (legacy) {
-            return ServerVersion.V1_8_8;
-        } else {
-            return ServerVersion.V1_13;
-        }
-
+        return legacy ? ServerVersion.V1_8_8 : ServerVersion.V1_13;
     }
 
+    private static RawServerVersion getRawServerVersion(@NotNull String rawVersion) {
+
+        try {
+            return new RawServerVersion(rawVersion);
+        } catch (ReflectionException reflectionEx) {
+            // nothing to do.
+        }
+
+        return null;
+    }
 }

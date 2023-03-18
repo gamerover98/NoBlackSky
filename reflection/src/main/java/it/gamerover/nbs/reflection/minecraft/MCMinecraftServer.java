@@ -1,5 +1,6 @@
 package it.gamerover.nbs.reflection.minecraft;
 
+import it.gamerover.nbs.reflection.RawServerVersion;
 import it.gamerover.nbs.reflection.ReflectionException;
 import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
@@ -26,10 +27,10 @@ public final class MCMinecraftServer extends MCReflection {
     private final String version;
 
     @SuppressWarnings("squid:S2637")
-    public MCMinecraftServer(@NotNull String completeServerVersion,
+    public MCMinecraftServer(@NotNull RawServerVersion rawServerVersion,
                              @NotNull Object minecraftServerInstance) throws ReflectionException {
 
-        super(completeServerVersion, MC_SUB_PACKAGE);
+        super(rawServerVersion, MC_SUB_PACKAGE);
 
         Class<?> minecraftServerClass = super.getMinecraftClass(MINECRAFT_SERVER_CLASS_NAME);
         String getVersionMethodResult = null;
