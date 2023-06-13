@@ -23,6 +23,9 @@ public enum ServerVersion {
     NEXT    ("next", null, Short.MAX_VALUE,Short.MAX_VALUE, false),
 
     // Add here the following versions ...
+    V1_20_1 ("1.20.1",  getRawServerVersion("v1_20_R1"), 763, 3465, false),
+    V1_20   ("1.20",    getRawServerVersion("v1_20_R1"), 763, 3463, false),
+
     V1_19_4 ("1.19.4",  getRawServerVersion("v1_19_R3"), 762, 3337, false),
     // Starting with Minecraft 1.19.3, Mojang decided to ruin developers' lives :/
     V1_19_3 ("1.19.3",  getRawServerVersion("v1_19_R2"), 761, 3218, false),
@@ -238,6 +241,14 @@ public enum ServerVersion {
 
     public static boolean isNext(@NotNull ServerVersion version) {
         return version.equals(NEXT);
+    }
+
+    public static boolean is1_20(@NotNull ServerVersion version) {
+        switch (version) {
+            case V1_20:
+            case V1_20_1: return true;
+            default: return false;
+        }
     }
 
     @SuppressWarnings("DuplicatedCode") // prevents checking code duplicates
