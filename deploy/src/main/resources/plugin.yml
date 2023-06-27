@@ -1,6 +1,6 @@
 name: NoBlackSky
 api-version: 1.13
-version: ${project.version}
+version: "${project.version}"
 main: it.gamerover.nbs.NoBlackSky
 description: ${project.description}
 website: https://www.spigotmc.org/resources/authors/gamerover98.27106/
