@@ -23,6 +23,7 @@ public enum ServerVersion {
     NEXT    ("next", null, Short.MAX_VALUE,Short.MAX_VALUE, false),
 
     // Add here the following versions ...
+    V1_20_2 ("1.20.2",  getRawServerVersion("v1_20_R2"), 764, 3578, false),
     V1_20_1 ("1.20.1",  getRawServerVersion("v1_20_R1"), 763, 3465, false),
     V1_20   ("1.20",    getRawServerVersion("v1_20_R1"), 763, 3463, false),
 
@@ -213,11 +214,20 @@ public enum ServerVersion {
     }
 
     @Nullable
-    public static ServerVersion getVersion(int protocolVersion) {
-
+    public static ServerVersion getVersionFromProtocolVersion(int protocolVersion) {
         for (ServerVersion version : ServerVersion.values()) {
-
             if (version.getProtocolVersion() == protocolVersion) {
+                return version;
+            }
+        }
+
+        return null;
+    }
+
+    @Nullable
+    public static ServerVersion getVersionFromDataVersion(int dataVersion) {
+        for (ServerVersion version : ServerVersion.values()) {
+            if (version.getDataVersion() == dataVersion) {
                 return version;
             }
         }
@@ -243,10 +253,20 @@ public enum ServerVersion {
         return version.equals(NEXT);
     }
 
+    /**
+     * @param v1 The first not-null version.
+     * @param v2 The second not-null version.
+     * @return True if the first version is major or equal to the second.
+     */
+    public static boolean isNextOrEqual(@NotNull ServerVersion v1, @NotNull ServerVersion v2) {
+        return v1.dataVersion >= v2.dataVersion;
+    }
+
     public static boolean is1_20(@NotNull ServerVersion version) {
         switch (version) {
             case V1_20:
-            case V1_20_1: return true;
+            case V1_20_1:
+            case V1_20_2: return true;
             default: return false;
         }
     }

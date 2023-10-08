@@ -6,6 +6,7 @@ import lombok.Getter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
@@ -17,6 +18,9 @@ public final class MCSharedConstants extends MCReflection {
     private static final String SHARED_CONSTANTS_CLASS_NAME  = "SharedConstants";
     private static final String GET_GAME_VERSION_METHOD_NAME_N1 = "getGameVersion";
     private static final String GET_GAME_VERSION_METHOD_NAME_N2 = "b";
+
+    // From 1.20.2
+    private static final String VERSION_STRING_FIELD_NAME = "VERSION_STRING";
 
     /**
      * Gets the GameVersion instance from the current running server.
@@ -70,14 +74,22 @@ public final class MCSharedConstants extends MCReflection {
                 errorMessage.append("or ");
                 errorMessage.append(GET_GAME_VERSION_METHOD_NAME_N2);
                 errorMessage.append("() ");
-                errorMessage.append("methods");
+                errorMessage.append("methods ");
 
+                try {
+
+                    Field staticVersionStringField = sharedConstantsClass.getField(VERSION_STRING_FIELD_NAME);
+                    return staticVersionStringField.get(null);
+
+                } catch (Exception ex3) {
+
+                    errorMessage.append("or ");
+                    errorMessage.append(VERSION_STRING_FIELD_NAME);
+                    errorMessage.append(" static field");
+                }
             }
 
             throw new ReflectionException(errorMessage.toString(), ex1);
-
         }
-
     }
-
 }
